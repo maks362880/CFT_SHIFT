@@ -6,8 +6,8 @@ import parser.ParserImpl;
 import parser.SortingMethod;
 
 public class MergeSortImpl implements MergeSort {
-    private String[] args;
-    private int maxPartSizeFileKb;
+    private final String[] args;
+    private final int maxPartSizeFileKb;
 
     private ClassObjectType classObjectType;
 
