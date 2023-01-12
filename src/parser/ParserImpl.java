@@ -1,6 +1,7 @@
 package parser;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ParserImpl implements Parser {
@@ -17,13 +18,17 @@ public class ParserImpl implements Parser {
 
 
     @Override
-    public List parse(String[] args, int offset) {//не забываем что args.length - это имя выходного файла!
+    public List parse(String[] args, int offset) {//не забываем что значение args.length - это имя выходного файла!
+
+
+            List<Object> bufferList = new ArrayList<Object>();//замутить generics и wildcard
+
 
         for (int i = offset; i < args.length - 1; i++) {
             try (BufferedReader br = new BufferedReader(new FileReader(args[i]), maxPartSizeFileKb*1024)) {
                 String line;
                 while ((line = br.readLine()) != null){
-
+                    bufferList.add(line);
                 }
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
@@ -33,7 +38,7 @@ public class ParserImpl implements Parser {
 
         }
 
-
+        bufferList.forEach(System.out::println);//test
         return null;
     }
 }
