@@ -16,8 +16,8 @@ public class FactoryBuilder{
 
     public void start(){
         switch (args[0]) {
-            case ("-i") -> new MergeSortNumbers(args, MAX_PART_SIZE_FILE);
-            case ("-s") -> new MergeSortString(args, MAX_PART_SIZE_FILE);
+            case ("-i") -> new MergeSortNumbers(args, MAX_PART_SIZE_FILE).run();
+            case ("-s") -> new MergeSortString(args, MAX_PART_SIZE_FILE).run();
             default -> new ExceptionWrongParam("Wrong param " + args[0] + "with id " + 0);
         }
     }
