@@ -19,30 +19,19 @@ public class ParserImpl implements Parser {
 
     @Override
     public List parse(String[] args, int offset) {
-
-
-            List<Object> bufferList = new ArrayList<Object>();//замутить generics и wildcard
-
-
+        List<Object> bufferList = new ArrayList<Object>();//замутить generics и wildcard
         for (int i = offset; i < args.length - 1; i++) {//не забываем что значение (args.length - 1) - это имя выходного файла!
-            try (BufferedReader br = new BufferedReader(
-                    new FileReader("resource\\" + args[i]), maxPartSizeFileKb*1024)) {
-                String line;
-                while ((line = br.readLine()) != null){
-                    bufferList.add(line);
-                }
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
+            readPartOfFile(bufferList, args[i]);
         }
+        writePartOfFiles(args, bufferList);
+        bufferList.forEach(System.out::println);//test
+        return null;
+    }
 
-
-        try(BufferedWriter bw = new BufferedWriter(
-                new FileWriter("resource\\" + args[args.length-1],true))) {//true - дописывание в конец файла
-            for (Object obj: bufferList) {
+    private static void writePartOfFiles(String[] args, List<Object> bufferList) {
+        try (BufferedWriter bw = new BufferedWriter(
+                new FileWriter("resource\\" + args[args.length - 1], true))) {//true - дописывание в конец файла
+            for (Object obj : bufferList) {
                 bw.write((String) obj);//решить проблему с кастингом
                 bw.newLine();
             }
@@ -50,9 +39,19 @@ public class ParserImpl implements Parser {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
 
-
-        bufferList.forEach(System.out::println);//test
-        return null;
+    private void readPartOfFile(List<Object> bufferList, String args) {
+        try (BufferedReader br = new BufferedReader(
+                new FileReader("resource\\" + args), maxPartSizeFileKb * 1024)) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                bufferList.add(line);
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
