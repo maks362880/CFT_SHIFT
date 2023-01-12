@@ -27,26 +27,25 @@ public class MergeSortImpl implements MergeSort {
 
     @Override
     public void run() {
-        Parser parser = new ParserImpl(classObjectType, maxPartSizeFileKb);
         switch (args[1]) {
             case ("-a") -> {
-                sortingMethod = SortingMethod.Asc;
+                Parser parser = new ParserImpl(classObjectType, SortingMethod.Asc, maxPartSizeFileKb);
                 parser.parse(args, 2);
             }
             case ("-d") -> {
-                sortingMethod = SortingMethod.Desc;
+                Parser parser = new ParserImpl(classObjectType, SortingMethod.Desc, maxPartSizeFileKb);
                 parser.parse(args, 2);
             }
             case ("-i") -> {
-                classObjectType = ClassObjectType.Integer;
+                Parser parser = new ParserImpl(ClassObjectType.Integer, SortingMethod.Desc, maxPartSizeFileKb);
                 parser.parse(args, 2);
             }
             case ("-s") -> {
-               classObjectType = ClassObjectType.String;
+                Parser parser = new ParserImpl(ClassObjectType.String, SortingMethod.Desc, maxPartSizeFileKb);
                 parser.parse(args, 2);
             }
             default -> {
-                sortingMethod = SortingMethod.Asc;
+                Parser parser = new ParserImpl(classObjectType, sortingMethod, maxPartSizeFileKb);
                 parser.parse(args, 1);
             }
         }
