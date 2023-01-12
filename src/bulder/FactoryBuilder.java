@@ -1,13 +1,12 @@
 package bulder;
 
-
 import controller.MergeSortNumbers;
 import controller.MergeSortString;
 import exeption_handling.ExceptionWrongParam;
 
 public class FactoryBuilder{
-    final int MAX_PART_SIZE_FILE = 4*1024;
-    String[] args;
+   private int maxPartSizeFileKb = 1024;//default value
+    private final String[] args;
 
 
     public FactoryBuilder(String[] args) {
@@ -16,9 +15,13 @@ public class FactoryBuilder{
 
     public void start(){
         switch (args[0]) {
-            case ("-i") -> new MergeSortNumbers(args, MAX_PART_SIZE_FILE).run();
-            case ("-s") -> new MergeSortString(args, MAX_PART_SIZE_FILE).run();
+            case ("-i") -> new MergeSortNumbers(args, maxPartSizeFileKb).run();
+            case ("-s") -> new MergeSortString(args, maxPartSizeFileKb).run();
             default -> new ExceptionWrongParam("Wrong param " + args[0] + "with id " + 0);
         }
+    }
+
+    public void setMaxPartFileSizeKb(int maxPartFileSizeKb) {
+        this.maxPartSizeFileKb = maxPartFileSizeKb;
     }
 }
