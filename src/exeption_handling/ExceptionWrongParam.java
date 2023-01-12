@@ -1,6 +1,7 @@
 package exeption_handling;
 
-public class ExceptionWrongParam {
-    public ExceptionWrongParam(String arg) {
+public class ExceptionWrongParam extends RuntimeException{
+    public ExceptionWrongParam(String message) {
+        super(message);
     }
 }
