@@ -1,8 +1,8 @@
 package bulder;
 
-import controller.MergeSortNumbers;
-import controller.MergeSortString;
+import controller.MergeSortImpl;
 import exeption_handling.ExceptionWrongParam;
+import parser.ClassObjectType;
 
 public class FactoryBuilder{
    private int maxPartSizeFileKb = 1024;//default value
@@ -15,8 +15,8 @@ public class FactoryBuilder{
 
     public void start(){
         switch (args[0]) {
-            case ("-i") -> new MergeSortNumbers(args, maxPartSizeFileKb).run();
-            case ("-s") -> new MergeSortString(args, maxPartSizeFileKb).run();
+            case ("-i") -> new MergeSortImpl(args, ClassObjectType.Integer, maxPartSizeFileKb).run();
+            case ("-s") -> new MergeSortImpl(args, ClassObjectType.String, maxPartSizeFileKb).run();
             default -> new ExceptionWrongParam("Wrong param " + args[0] + "with id " + 0);
         }
     }
