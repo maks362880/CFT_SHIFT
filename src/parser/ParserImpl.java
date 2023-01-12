@@ -1,5 +1,6 @@
 package parser;
 
+import java.io.*;
 import java.util.List;
 
 public class ParserImpl implements Parser{
@@ -14,12 +15,6 @@ public class ParserImpl implements Parser{
 
     @Override
     public List parse(String[] args, int offset) {
-
-
-        for (int i = offset; i < args.length; i++) {
-
-        }
-
-        return null;
+       return null;
     }
 }
