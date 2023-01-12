@@ -14,6 +14,12 @@ public class ParserImpl implements Parser{
 
     @Override
     public List parse(String[] args, int offset) {
+
+
+        for (int i = offset; i < args.length; i++) {
+
+        }
+
         return null;
     }
 }
