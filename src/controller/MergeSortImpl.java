@@ -11,7 +11,7 @@ public class MergeSortImpl implements MergeSort {
 
     private ClassObjectType classObjectType;
 
-    private SortingMethod sortingMethod;
+    private SortingMethod sortingMethod = SortingMethod.Asc;//default ASC - возрастание
 
     public MergeSortImpl(String[] args, ClassObjectType classObjectType, int maxPartSizeFile) {
         this.args = args;
