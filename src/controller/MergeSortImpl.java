@@ -19,6 +19,12 @@ public class MergeSortImpl implements MergeSort {
         this.maxPartSizeFileKb = maxPartSizeFile;
     }
 
+    public MergeSortImpl(String[] args, SortingMethod sortingMethod, int maxPartSizeFileKb) {
+        this.args = args;
+        this.sortingMethod = sortingMethod;
+        this.maxPartSizeFileKb = maxPartSizeFileKb;
+    }
+
     @Override
     public void run() {
         Parser parser = new ParserImpl(classObjectType, maxPartSizeFileKb);
@@ -29,6 +35,14 @@ public class MergeSortImpl implements MergeSort {
             }
             case ("-d") -> {
                 sortingMethod = SortingMethod.Desc;
+                parser.parse(args, 2);
+            }
+            case ("-i") -> {
+                classObjectType = ClassObjectType.Integer;
+                parser.parse(args, 2);
+            }
+            case ("-s") -> {
+               classObjectType = ClassObjectType.String;
                 parser.parse(args, 2);
             }
             default -> {
