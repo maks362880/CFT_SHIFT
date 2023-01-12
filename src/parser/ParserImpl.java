@@ -25,7 +25,7 @@ public class ParserImpl implements Parser {
 
 
         for (int i = offset; i < args.length - 1; i++) {
-            try (BufferedReader br = new BufferedReader(new FileReader(args[i]), maxPartSizeFileKb*1024)) {
+            try (BufferedReader br = new BufferedReader(new FileReader("resource\\" + args[i]), maxPartSizeFileKb*1024)) {
                 String line;
                 while ((line = br.readLine()) != null){
                     bufferList.add(line);

@@ -1,4 +1,4 @@
-package bulder;
+package builder;
 
 import controller.MergeSortImpl;
 import exeption_handling.ExceptionWrongParam;

@@ -1,4 +1,4 @@
-import bulder.FactoryBuilder;
+import builder.FactoryBuilder;
 
 public class Main {
     public static void main(String[] args) {
