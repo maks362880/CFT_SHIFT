@@ -38,6 +38,18 @@ public class ParserImpl implements Parser {
 
         }
 
+
+        try(BufferedWriter bw = new BufferedWriter(new FileWriter("resource\\" + args[args.length-1]))) {
+            for (Object obj: bufferList) {
+                bw.write((String) obj);//решить проблему с кастингом
+                bw.newLine();
+            }
+            bw.flush();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
         bufferList.forEach(System.out::println);//test
         return null;
     }
