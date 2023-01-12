@@ -1,16 +1,13 @@
-import controller.MergeSort;
-import controller.MergeSortNumbersAsc;
-import controller.MergeSortrunStringAsc;
-import controller.MergeSortrunStringDesc;
+import controller.*;
 import exeption_handling.ExceptionWrongParam;
 
 public class Main {
     public static void main(String[] args) {
+        final int MAX_PART_SIZE_FILE = 1024;
         MergeSort ms;
         switch (args[0]) {
-            case ("-i") -> new MergeSortNumbersAsc(args);
-            case ("-s") -> new MergeSortrunStringAsc(args);
-            case ("-d") -> new MergeSortrunStringDesc(args);
+            case ("-i") -> new MergeSortNumbers(args,MAX_PART_SIZE_FILE);
+            case ("-s") -> new MergeSortString(args,MAX_PART_SIZE_FILE);
             default -> new ExceptionWrongParam(args[0]);
         }
 
