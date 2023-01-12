@@ -6,7 +6,7 @@ import parser.ClassObjectType;
 import parser.SortingMethod;
 
 public class FactoryBuilder{
-   private int maxPartSizeFileKb = 1024;//default value
+   private int maxPartSizeFileKb = 1024;//default value in kb
     private final String[] args;
 
 
