@@ -1,30 +1,22 @@
 package readAndWrite;
 
-import exeptionHandling.ExceptionWrongParam;
+import exeptionHandling.ExceptionAndLogFile;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.List;
+import java.util.Map;
 
 public class ReadPartOfIntegerFiles {
 
 
-    public void read(List<Integer> bufferList, String inputFileName, int maxPartSizeFileKb) {
-        try (BufferedReader br = new BufferedReader(
-                new FileReader("resource\\" + inputFileName), maxPartSizeFileKb * 1024)) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                try {
-                    bufferList.add(Integer.parseInt(line));
-                }
-                catch (NumberFormatException e){
-                    new ExceptionWrongParam("Something wrong in file '" + inputFileName +
-                            "' error message: " + e.getMessage());
-                }
-            }
+    public void read(Map<BufferedReader, String> bufferList, String inputFileName, int maxPartSizeFileKb) {
+        try {
+            BufferedReader br = new BufferedReader(
+                    new FileReader("resource\\" + inputFileName), maxPartSizeFileKb * 1024);
+            bufferList.put(br, inputFileName);
         } catch (IOException e) {
-            new ExceptionWrongParam("Something wrong in file '" + inputFileName +
+            new ExceptionAndLogFile("Something wrong in file '" + inputFileName +
                     "' error message: " + e.getMessage());
         }
     }

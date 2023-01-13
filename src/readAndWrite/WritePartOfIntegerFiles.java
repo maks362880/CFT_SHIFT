@@ -1,6 +1,6 @@
 package readAndWrite;
 
-import exeptionHandling.ExceptionWrongParam;
+import exeptionHandling.ExceptionAndLogFile;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -9,7 +9,7 @@ import java.util.List;
 
 public class WritePartOfIntegerFiles {
 
-    public static void write(String outputFileName, List<Integer> bufferList) {
+    public void write(String outputFileName, List<Integer> bufferList) {
         try (BufferedWriter bw = new BufferedWriter(
                 new FileWriter("resource\\" + outputFileName, true))) {//true - дописывание в конец файла
             for (Integer val : bufferList) {
@@ -18,7 +18,7 @@ public class WritePartOfIntegerFiles {
             }
             bw.flush();
         } catch (IOException e) {
-            new ExceptionWrongParam("Something wrong in file '" + outputFileName +
+            new ExceptionAndLogFile("Something wrong in file '" + outputFileName +
                     "' error message: " + e.getMessage());
         }
     }

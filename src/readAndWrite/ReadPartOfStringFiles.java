@@ -1,6 +1,6 @@
 package readAndWrite;
 
-import exeptionHandling.ExceptionWrongParam;
+import exeptionHandling.ExceptionAndLogFile;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -18,12 +18,12 @@ public class ReadPartOfStringFiles {
                     bufferList.add(line);
                 }
                 catch (NumberFormatException e){
-                    new ExceptionWrongParam("Something wrong in file '" + inputFileName +
+                    new ExceptionAndLogFile("Something wrong in file '" + inputFileName +
                             "' error message: " + e.getMessage());
                 }
             }
         } catch (IOException e) {
-            new ExceptionWrongParam("Something wrong in file '" + inputFileName +
+            new ExceptionAndLogFile("Something wrong in file '" + inputFileName +
                     "' error message: " + e.getMessage());
         }
     }

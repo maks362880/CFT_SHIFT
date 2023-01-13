@@ -1,6 +1,6 @@
 package readAndWrite;
 
-import exeptionHandling.ExceptionWrongParam;
+import exeptionHandling.ExceptionAndLogFile;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -18,7 +18,7 @@ public class WritePartOfStringFiles {
             }
             bw.flush();
         } catch (IOException e) {
-            new ExceptionWrongParam("Something wrong in file '" + outputFileName +
+            new ExceptionAndLogFile("Something wrong in file '" + outputFileName +
                     "' error message: " + e.getMessage());
         }
     }

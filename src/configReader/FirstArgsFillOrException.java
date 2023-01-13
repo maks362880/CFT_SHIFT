@@ -1,7 +1,7 @@
 package configReader;
 
 import builder.BuildAndRunSortMethod;
-import exeptionHandling.ExceptionWrongParam;
+import exeptionHandling.ExceptionAndLogFile;
 import sorters.ClassObjectType;
 import sorters.SortingMethod;
 
@@ -20,7 +20,7 @@ public class FirstArgsFillOrException {
             case ("-s") -> buildAndRunSortMethod.setClassObjectType(ClassObjectType.String);
             case ("-a") -> buildAndRunSortMethod.setSortingMethod(SortingMethod.Asc);
             case ("-d") -> buildAndRunSortMethod.setSortingMethod(SortingMethod.Desc);
-            default -> new ExceptionWrongParam("Wrong param '" + firstArgs + "' with id " + 0);
+            default -> new ExceptionAndLogFile("Wrong param '" + firstArgs + "' with id " + 0);
 
         }
     }
