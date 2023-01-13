@@ -17,7 +17,7 @@ public class IntegerControllerImpl implements Controller {
 
     @Override
     public List create(String[] args, int offset) {
-        List<Integer> bufferList = new ArrayList<Integer>();
+        List<Integer> bufferList = new ArrayList<>();
         for (int i = offset; i < args.length - 1; i++) {//не забываем что значение (args.length - 1) - это имя выходного файла!
             readPartOfFile(bufferList, args[i]);
         }
@@ -30,7 +30,7 @@ public class IntegerControllerImpl implements Controller {
         try (BufferedWriter bw = new BufferedWriter(
                 new FileWriter("resource\\" + args[args.length - 1], true))) {//true - дописывание в конец файла
             for (Integer val : bufferList) {
-                bw.write(val);//решить проблему с кастингом
+                bw.write(val);
                 bw.newLine();
             }
             bw.flush();

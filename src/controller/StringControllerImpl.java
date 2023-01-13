@@ -17,7 +17,7 @@ public class StringControllerImpl implements Controller {
 
     @Override
     public List create(String[] args, int offset) {
-        List<String> bufferList = new ArrayList<String>();
+        List<String> bufferList = new ArrayList<>();
         for (int i = offset; i < args.length - 1; i++) {//не забываем что значение (args.length - 1) - это имя выходного файла!
             readPartOfFile(bufferList, args[i]);
         }
@@ -29,8 +29,8 @@ public class StringControllerImpl implements Controller {
     private static void writePartOfFiles(String[] args, List<String> bufferList) {
         try (BufferedWriter bw = new BufferedWriter(
                 new FileWriter("resource\\" + args[args.length - 1], true))) {//true - дописывание в конец файла
-            for (Object obj : bufferList) {
-                bw.write((String) obj);//решить проблему с кастингом
+            for (String val : bufferList) {
+                bw.write(val);
                 bw.newLine();
             }
             bw.flush();
