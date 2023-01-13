@@ -1,19 +1,30 @@
 package configReader;
 
 import builder.BuildAndRunSortMethod;
+import exeptionHandling.ExceptionAndLogFile;
 import sorters.ClassObjectType;
 import sorters.SortingMethod;
 
-public class SecondArgsFill {
+public class argsFillOrException {
 
-    private final String firstArgs;
+    private final String[] args;
 
-    public SecondArgsFill(String firstArgs) {
-        this.firstArgs = firstArgs;
+
+    public argsFillOrException(String args[]) {
+        this.args = args;
     }
 
-    public void createSecondArg(BuildAndRunSortMethod buildAndRunSortMethod) {
-        switch (firstArgs) {
+    public void createUseArgs(BuildAndRunSortMethod buildAndRunSortMethod) {
+        switch (args[0]) {
+            case ("-i") -> buildAndRunSortMethod.setClassObjectType(ClassObjectType.Integer);
+            case ("-s") -> buildAndRunSortMethod.setClassObjectType(ClassObjectType.String);
+            case ("-a") -> buildAndRunSortMethod.setSortingMethod(SortingMethod.Asc);
+            case ("-d") -> buildAndRunSortMethod.setSortingMethod(SortingMethod.Desc);
+            default -> new ExceptionAndLogFile("Wrong param '" + args + "' with id " + 0);
+
+        }
+
+        switch (args[1]) {
             case ("-i") -> {
                 buildAndRunSortMethod.setClassObjectType(ClassObjectType.Integer);
                 buildAndRunSortMethod.setOffset(2);
