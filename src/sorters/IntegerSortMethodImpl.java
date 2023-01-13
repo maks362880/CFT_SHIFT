@@ -1,7 +1,7 @@
 package sorters;
 
-import DAO.ReadPartOfIntegerFiles;
-import DAO.WritePartOfIntegerFiles;
+import readAndWrite.ReadPartOfIntegerFiles;
+import readAndWrite.WritePartOfIntegerFiles;
 
 import java.util.ArrayList;
 import java.util.List;

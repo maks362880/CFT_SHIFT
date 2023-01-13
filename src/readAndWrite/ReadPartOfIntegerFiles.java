@@ -1,4 +1,4 @@
-package DAO;
+package readAndWrite;
 
 import exeptionHandling.ExceptionWrongParam;
 

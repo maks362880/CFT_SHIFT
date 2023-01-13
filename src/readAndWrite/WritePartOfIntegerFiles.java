@@ -1,4 +1,4 @@
-package DAO;
+package readAndWrite;
 
 import exeptionHandling.ExceptionWrongParam;
 
@@ -13,7 +13,7 @@ public class WritePartOfIntegerFiles {
         try (BufferedWriter bw = new BufferedWriter(
                 new FileWriter("resource\\" + outputFileName, true))) {//true - дописывание в конец файла
             for (Integer val : bufferList) {
-                bw.write(val);
+                bw.write(String.valueOf(val));
                 bw.newLine();
             }
             bw.flush();
