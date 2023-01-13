@@ -20,7 +20,7 @@ public class ArgsReader {
             case ("-s") -> new BuilderImpl(args, ClassObjectType.String, maxPartSizeFileKb).create();
             case ("-a") -> new BuilderImpl(args, SortingMethod.Asc, maxPartSizeFileKb).create();
             case ("-d") -> new BuilderImpl(args, SortingMethod.Desc, maxPartSizeFileKb).create();
-            default -> new ExceptionWrongParam("Wrong param " + args[0] + "with id " + 0);
+            default -> new ExceptionWrongParam("Wrong param " + args[0] + " with id " + 0);
         }
     }
 
