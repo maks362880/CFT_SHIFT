@@ -1,6 +1,6 @@
 package builder;
 
-import controller.*;
+import sorters.*;
 
 public class BuilderImpl implements Builder {
     private final String[] args;
@@ -26,42 +26,42 @@ public class BuilderImpl implements Builder {
     public void create() {
         switch (args[1]) {
             case ("-a") -> {
-                Controller controller;
+                SortMethod sortMethod;
                 if(classObjectType == ClassObjectType.Integer) {
-                    controller = new IntegerControllerImpl(SortingMethod.Asc, maxPartSizeFileKb);
-                    controller.create(args, 2);
+                    sortMethod = new IntegerSortMethodImpl(SortingMethod.Asc, maxPartSizeFileKb);
+                    sortMethod.sort(args, 2);
                 }else if(classObjectType == ClassObjectType.String){
-                    controller = new StringControllerImpl(SortingMethod.Asc, maxPartSizeFileKb);
-                    controller.create(args, 2);
+                    sortMethod = new StringSortMethodImpl(SortingMethod.Asc, maxPartSizeFileKb);
+                    sortMethod.sort(args, 2);
                 }
             }
             case ("-d") -> {
-                Controller controller;
+                SortMethod sortMethod;
                 if(classObjectType == ClassObjectType.Integer) {
-                    controller = new IntegerControllerImpl(SortingMethod.Desc, maxPartSizeFileKb);
-                    controller.create(args, 2);
+                    sortMethod = new IntegerSortMethodImpl(SortingMethod.Desc, maxPartSizeFileKb);
+                    sortMethod.sort(args, 2);
                 }else if(classObjectType == ClassObjectType.String){
-                    controller = new StringControllerImpl(SortingMethod.Desc, maxPartSizeFileKb);
-                    controller.create(args, 2);
+                    sortMethod = new StringSortMethodImpl(SortingMethod.Desc, maxPartSizeFileKb);
+                    sortMethod.sort(args, 2);
                 }
             }
             case ("-i") -> {
-                Controller controller = new IntegerControllerImpl(sortingMethod, maxPartSizeFileKb);
-                controller.create(args, 2);
+                SortMethod sortMethod = new IntegerSortMethodImpl(sortingMethod, maxPartSizeFileKb);
+                sortMethod.sort(args, 2);
             }
             case ("-s") -> {
-                Controller controller = new StringControllerImpl(sortingMethod, maxPartSizeFileKb);
-                controller.create(args, 2);
+                SortMethod sortMethod = new StringSortMethodImpl(sortingMethod, maxPartSizeFileKb);
+                sortMethod.sort(args, 2);
             }
             default -> {
-                Controller controller;
+                SortMethod sortMethod;
                 if(classObjectType == ClassObjectType.Integer) {
-                    controller = new IntegerControllerImpl(sortingMethod, maxPartSizeFileKb);
-                    controller.create(args, 1);
+                    sortMethod = new IntegerSortMethodImpl(sortingMethod, maxPartSizeFileKb);
+                    sortMethod.sort(args, 1);
                 }
                 if(classObjectType == ClassObjectType.String) {
-                    controller = new StringControllerImpl(sortingMethod, maxPartSizeFileKb);
-                    controller.create(args, 1);
+                    sortMethod = new StringSortMethodImpl(sortingMethod, maxPartSizeFileKb);
+                    sortMethod.sort(args, 1);
                 }
             }
         }

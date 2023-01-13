@@ -1,4 +1,4 @@
-import reader.ArgsReader;
+import configReader.ArgsReader;
 
 public class Main {
     public static void main(String[] args) {

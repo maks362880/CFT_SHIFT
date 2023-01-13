@@ -1,23 +1,23 @@
-package controller;
+package sorters;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IntegerControllerImpl implements Controller {
+public class StringSortMethodImpl implements SortMethod {
 
     SortingMethod sortingMethod;
     int maxPartSizeFileKb;
 
-    public IntegerControllerImpl(SortingMethod sortingMethod, int maxPartSizeFileKb) {
+    public StringSortMethodImpl(SortingMethod sortingMethod, int maxPartSizeFileKb) {
         this.sortingMethod = sortingMethod;
         this.maxPartSizeFileKb = maxPartSizeFileKb;
     }
 
 
     @Override
-    public List create(String[] args, int offset) {
-        List<Integer> bufferList = new ArrayList<>();
+    public List sort(String[] args, int offset) {
+        List<String> bufferList = new ArrayList<>();
         for (int i = offset; i < args.length - 1; i++) {//не забываем что значение (args.length - 1) - это имя выходного файла!
             readPartOfFile(bufferList, args[i]);
         }
@@ -26,10 +26,10 @@ public class IntegerControllerImpl implements Controller {
         return null;
     }
 
-    private static void writePartOfFiles(String[] args, List<Integer> bufferList) {
+    private static void writePartOfFiles(String[] args, List<String> bufferList) {
         try (BufferedWriter bw = new BufferedWriter(
                 new FileWriter("resource\\" + args[args.length - 1], true))) {//true - дописывание в конец файла
-            for (Integer val : bufferList) {
+            for (String val : bufferList) {
                 bw.write(val);
                 bw.newLine();
             }
@@ -39,12 +39,12 @@ public class IntegerControllerImpl implements Controller {
         }
     }
 
-    private void readPartOfFile(List<Integer> bufferList, String args) {
+    private void readPartOfFile(List<String> bufferList, String args) {
         try (BufferedReader br = new BufferedReader(
                 new FileReader("resource\\" + args), maxPartSizeFileKb * 1024)) {
             String line;
             while ((line = br.readLine()) != null) {
-                bufferList.add(Integer.parseInt(line));
+                bufferList.add(line);
             }
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);

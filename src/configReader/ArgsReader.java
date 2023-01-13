@@ -1,9 +1,9 @@
-package reader;
+package configReader;
 
 import builder.BuilderImpl;
 import exeptionHandling.ExceptionWrongParam;
-import controller.ClassObjectType;
-import controller.SortingMethod;
+import sorters.ClassObjectType;
+import sorters.SortingMethod;
 
 public class ArgsReader {
    private int maxPartSizeFileKb = 1024;//default value in kb
