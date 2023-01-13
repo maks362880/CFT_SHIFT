@@ -3,30 +3,35 @@ package builder;
 import sorters.*;
 
 public class BuildAndRunSortMethod {
-    private final String[] args;
-    private final int maxPartSizeFileKb;
-
-    private int offset;
-
-    private ClassObjectType classObjectType;
 
     private SortingMethod sortingMethod = SortingMethod.Asc;//default ASC - возрастание
+    public void create() {
+        if (classObjectType == ClassObjectType.Integer) {
+            SortMethod sortMethod = new IntegerSortMethodImpl(sortingMethod, maxPartSizeFileKb);
+            sortMethod.sort(args, offset);
+        } else if (classObjectType == ClassObjectType.String) {
+            SortMethod sortMethod = new StringSortMethodImpl(sortingMethod, maxPartSizeFileKb);
+            sortMethod.sort(args, offset);
+        }
+    }
+
+    public void setClassObjectType(ClassObjectType classObjectType) {
+        this.classObjectType = classObjectType;
+    }
+
+    public void setSortingMethod(SortingMethod sortingMethod) {
+        this.sortingMethod = sortingMethod;
+    }
+
+    public void setOffset(int offset) {
+        this.offset = offset;
+    }
 
     public BuildAndRunSortMethod(String[] args, int maxPartSizeFileKb) {
         this.args = args;
         this.maxPartSizeFileKb = maxPartSizeFileKb;
     }
 
-    public void create() {
-        if (classObjectType == ClassObjectType.Integer){
-            SortMethod sortMethod = new IntegerSortMethodImpl(sortingMethod,maxPartSizeFileKb);
-            sortMethod.sort(args, offset);
-        }else  if (classObjectType == ClassObjectType.String){
-            SortMethod sortMethod = new StringSortMethodImpl(sortingMethod,maxPartSizeFileKb);
-        sortMethod.sort(args,offset);
-        }
-
-    }
 
     public ClassObjectType getClassObjectType() {
         return classObjectType;
@@ -44,15 +49,10 @@ public class BuildAndRunSortMethod {
         return maxPartSizeFileKb;
     }
 
-    public void setClassObjectType(ClassObjectType classObjectType) {
-        this.classObjectType = classObjectType;
-    }
+    private final String[] args;
+    private final int maxPartSizeFileKb;
 
-    public void setSortingMethod(SortingMethod sortingMethod) {
-        this.sortingMethod = sortingMethod;
-    }
+    private int offset;
 
-    public void setOffset(int offset) {
-        this.offset = offset;
-    }
+    private ClassObjectType classObjectType;
 }

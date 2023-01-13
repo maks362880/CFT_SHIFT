@@ -8,21 +8,20 @@ import java.util.List;
 
 public class IntegerSortMethodImpl implements SortMethod {
 
-    SortingMethod sortingMethod;
-    int maxPartSizeFileKb;
+    private final SortingMethod sortingMethod;
+    private final int maxPartSizeFileKb;
 
     public IntegerSortMethodImpl(SortingMethod sortingMethod, int maxPartSizeFileKb) {
         this.sortingMethod = sortingMethod;
         this.maxPartSizeFileKb = maxPartSizeFileKb;
     }
 
-
     @Override
     public void sort(String[] args, int offset) {
         List<Integer> bufferList = new ArrayList<>();
 
         ReadPartOfIntegerFiles readPartOfFiles = new ReadPartOfIntegerFiles();
-        for (int i = offset+1; i < args.length ; i++) {
+        for (int i = offset + 1; i < args.length; i++) {
             readPartOfFiles.read(bufferList, args[i], maxPartSizeFileKb);
         }
         WritePartOfIntegerFiles writePartOfFiles = new WritePartOfIntegerFiles();
@@ -30,7 +29,11 @@ public class IntegerSortMethodImpl implements SortMethod {
         bufferList.forEach(System.out::println);//test
     }
 
-    public void setMaxPartSizeFileKb(int maxPartSizeFileKb) {
-        this.maxPartSizeFileKb = maxPartSizeFileKb;
+    public SortingMethod getSortingMethod() {
+        return sortingMethod;
+    }
+
+    public int getMaxPartSizeFileKb() {
+        return maxPartSizeFileKb;
     }
 }

@@ -8,7 +8,6 @@ public class SecondArgsFill {
 
     private final String firstArgs;
 
-
     public SecondArgsFill(String firstArgs) {
         this.firstArgs = firstArgs;
     }

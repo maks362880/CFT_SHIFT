@@ -2,21 +2,18 @@ package sorters;
 
 import readAndWrite.ReadPartOfStringFiles;
 import readAndWrite.WritePartOfStringFiles;
-
-import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class StringSortMethodImpl implements SortMethod {
 
-    SortingMethod sortingMethod;
-    int maxPartSizeFileKb;
+   private final SortingMethod sortingMethod;
+   private final int maxPartSizeFileKb;
 
     public StringSortMethodImpl(SortingMethod sortingMethod, int maxPartSizeFileKb) {
         this.sortingMethod = sortingMethod;
         this.maxPartSizeFileKb = maxPartSizeFileKb;
     }
-
 
     @Override
     public void sort(String[] args, int offset) {
@@ -30,6 +27,13 @@ public class StringSortMethodImpl implements SortMethod {
         bufferList.forEach(System.out::println);//test
     }
 
+    public SortingMethod getSortingMethod() {
+        return sortingMethod;
+    }
+
+    public int getMaxPartSizeFileKb() {
+        return maxPartSizeFileKb;
+    }
 }
 
 
