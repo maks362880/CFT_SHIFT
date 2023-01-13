@@ -2,7 +2,7 @@ package sorters;
 
 
 public interface SortMethod {
-     void sort(String args[], int offset);
+     void startMethod(String args[], int offset);
 
 
 }

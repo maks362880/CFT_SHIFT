@@ -1,7 +1,7 @@
 package sorters;
 
 import exeptionHandling.ExceptionAndLogFile;
-import readAndWrite.ReadPartOfIntegerFiles;
+import readAndWrite.ReadPartFiles;
 import readAndWrite.WritePartOfIntegerFiles;
 
 import java.io.BufferedReader;
@@ -20,11 +20,11 @@ public class IntegerSortMethodImpl implements SortMethod {
     }
 
     @Override
-    public void sort(String[] args, int offset) {
+    public void startMethod(String[] args, int offset) {
         this.outputFileName = args[offset];
         Map<BufferedReader, String> bufferList = new HashMap<>();
 
-        ReadPartOfIntegerFiles readPartOfFiles = new ReadPartOfIntegerFiles();
+        ReadPartFiles readPartOfFiles = new ReadPartFiles();
         for (int i = offset + 1; i < args.length; i++) {
             readPartOfFiles.read(bufferList, args[i], maxPartSizeFileKb);
         }

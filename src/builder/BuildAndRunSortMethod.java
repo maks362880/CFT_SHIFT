@@ -1,5 +1,4 @@
 package builder;
-
 import sorters.*;
 
 public class BuildAndRunSortMethod {
@@ -8,10 +7,10 @@ public class BuildAndRunSortMethod {
     public void create() {
         if (classObjectType == ClassObjectType.Integer) {
             SortMethod sortMethod = new IntegerSortMethodImpl(sortingMethod, maxPartSizeFileKb);
-            sortMethod.sort(args, offset);
+            sortMethod.startMethod(args, offset);
         } else if (classObjectType == ClassObjectType.String) {
             SortMethod sortMethod = new StringSortMethodImpl(sortingMethod, maxPartSizeFileKb);
-            sortMethod.sort(args, offset);
+            sortMethod.startMethod(args, offset);
         }
     }
 
@@ -32,27 +31,20 @@ public class BuildAndRunSortMethod {
         this.maxPartSizeFileKb = maxPartSizeFileKb;
     }
 
-
+    private final String[] args;
+    private final int maxPartSizeFileKb;
+    private int offset;
+    private ClassObjectType classObjectType;
     public ClassObjectType getClassObjectType() {
         return classObjectType;
     }
-
     public SortingMethod getSortingMethod() {
         return sortingMethod;
     }
-
     public String[] getArgs() {
         return args;
     }
-
     public int getMaxPartSizeFileKb() {
         return maxPartSizeFileKb;
     }
-
-    private final String[] args;
-    private final int maxPartSizeFileKb;
-
-    private int offset;
-
-    private ClassObjectType classObjectType;
 }

@@ -9,7 +9,6 @@ public class argsFillOrException {
 
     private final String[] args;
 
-
     public argsFillOrException(String args[]) {
         this.args = args;
     }

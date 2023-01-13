@@ -7,8 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Map;
 
-public class ReadPartOfIntegerFiles {
-
+public class ReadPartFiles {
 
     public void read(Map<BufferedReader, String> bufferList, String inputFileName, int maxPartSizeFileKb) {
         try {

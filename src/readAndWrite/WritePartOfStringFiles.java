@@ -9,7 +9,7 @@ import java.util.List;
 
 public class WritePartOfStringFiles {
 
-    public static void write(String outputFileName, List<String> bufferList) {
+    public void write(String outputFileName, List<String> bufferList) {
         try (BufferedWriter bw = new BufferedWriter(
                 new FileWriter("resource\\" + outputFileName, true))) {//true - дописывание в конец файла
             for (String val : bufferList) {
