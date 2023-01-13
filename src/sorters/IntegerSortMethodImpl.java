@@ -22,11 +22,11 @@ public class IntegerSortMethodImpl implements SortMethod {
         List<Integer> bufferList = new ArrayList<>();
 
         ReadPartOfIntegerFiles readPartOfFiles = new ReadPartOfIntegerFiles();
-        for (int i = offset; i < args.length - 1; i++) {//не забываем что значение (args.length - 1) - это имя выходного файла!
+        for (int i = offset+1; i < args.length ; i++) {
             readPartOfFiles.read(bufferList, args[i], maxPartSizeFileKb);
         }
         WritePartOfIntegerFiles writePartOfFiles = new WritePartOfIntegerFiles();
-        writePartOfFiles.write(args[args.length - 1], bufferList);
+        writePartOfFiles.write(args[offset], bufferList);
         bufferList.forEach(System.out::println);//test
 
     }

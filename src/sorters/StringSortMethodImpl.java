@@ -20,10 +20,10 @@ public class StringSortMethodImpl implements SortMethod {
     @Override
     public void sort(String[] args, int offset) {
         List<String> bufferList = new ArrayList<>();
-        for (int i = offset; i < args.length - 1; i++) {//не забываем что значение (args.length - 1) - это имя выходного файла!
+        for (int i = offset+1; i < args.length; i++) {//не забываем что значение (args.length - 1) - это имя выходного файла!
             readPartOfFile(bufferList, args[i]);
         }
-        writePartOfFiles(args[args.length-1], bufferList);
+        writePartOfFiles(args[offset], bufferList);
         bufferList.forEach(System.out::println);//test
     }
 
@@ -43,7 +43,7 @@ public class StringSortMethodImpl implements SortMethod {
 
     private void readPartOfFile(List<String> bufferList, String inputFileName) {//перенести в DAO
         try (BufferedReader br = new BufferedReader(
-                new FileReader("resource\\" + inputFileName), maxPartSizeFileKb * 1024)) {
+                new FileReader("resource\\" + inputFileName), maxPartSizeFileKb*1024)) {
             String line;
             while ((line = br.readLine()) != null) {
                 bufferList.add(line);
