@@ -26,7 +26,7 @@ public class IntegerSortMethodImpl implements SortMethod {
         return null;
     }
 
-    private static void writePartOfFiles(String[] args, List<Integer> bufferList) {
+    private static void writePartOfFiles(String[] args, List<Integer> bufferList) {//перенести в DAO
         try (BufferedWriter bw = new BufferedWriter(
                 new FileWriter("resource\\" + args[args.length - 1], true))) {//true - дописывание в конец файла
             for (Integer val : bufferList) {
@@ -39,7 +39,7 @@ public class IntegerSortMethodImpl implements SortMethod {
         }
     }
 
-    private void readPartOfFile(List<Integer> bufferList, String args) {
+    private void readPartOfFile(List<Integer> bufferList, String args) {//перенести в DAO
         try (BufferedReader br = new BufferedReader(
                 new FileReader("resource\\" + args), maxPartSizeFileKb * 1024)) {
             String line;
