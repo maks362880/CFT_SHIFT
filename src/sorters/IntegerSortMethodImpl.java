@@ -79,7 +79,7 @@ public class IntegerSortMethodImpl implements SortMethod {
 
                         //конец сложной логики
                     } catch (NumberFormatException e) {
-                        new ExceptionAndLogFile("Something wrong in file '" + bufferMap.get(reader) +//это ошибка если значение не int запросили путь файла через мапу
+                        new ExceptionAndLogFile("Something wrong in file '" + bufferMap.get(reader) +//это ошибка если значение НЕ int. Запишется в лог файл (запросили путь к файлу через мапу)
                                 "' error message: " + e.getMessage());
                     }
 
