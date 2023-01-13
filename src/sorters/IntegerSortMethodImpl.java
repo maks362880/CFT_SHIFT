@@ -43,6 +43,8 @@ public class IntegerSortMethodImpl implements SortMethod {
         BufferedReader bufferedReaderWithMinValue;//буферридер с текущим минимальным значением внутри
         int size = bufferMap.size();// количество буферидеов
         int finishedBufferedReader = 0;//количество буферридеров из которых взяли все данные
+        List<Integer> integerList = new ArrayList<>(1000);//создадим коллекцию которую при заполнении будем
+        // записывать в файл и чистить объем 1000 можно заменить внешним параметром/аргументом
 
         List<BufferedReader> bufferedReaderList = new ArrayList<>(bufferMap.size());//для простоты работы с потоками из буферридеров
         //перезапишем их в лист, ошибки можно найти кинув ссылку объекта буфера в мапу и получить оттуда значение
@@ -57,26 +59,39 @@ public class IntegerSortMethodImpl implements SortMethod {
                 try {
                     try {
                         int val = Integer.parseInt(reader.readLine());
+                        //здесь должна быть сложная логика
+
+
+
+
+
+
                         if (val < minValue) {
                             minValue = val;
                             bufferedReaderWithMinValue = reader;
                         }
-                        System.out.println(val);//test
+                        System.out.println(val);//вывод на экран что бы понимать что происходит
                         integerList.add(val);
+
+
+
+
+
+                        //конец сложной логики
                     } catch (NumberFormatException e) {
-                        new ExceptionAndLogFile("Something wrong in file '" + bufferMap.get(reader) +//запросили путь файла через мапу
+                        new ExceptionAndLogFile("Something wrong in file '" + bufferMap.get(reader) +//это ошибка если значение не int запросили путь файла через мапу
                                 "' error message: " + e.getMessage());
                     }
 
 
                 } catch (IOException e) {
-                    new ExceptionAndLogFile("Something wrong in file '" + bufferMap.get(reader) +
+                    new ExceptionAndLogFile("Something wrong in file '" + bufferMap.get(reader) +//это ошибка если у буферридера не все хорошо
                             "' error message: " + e.getMessage());
                 }
 
                 try {
                     if (!reader.ready()) {//если буферридер не готов
-                        reader.close();
+                        reader.close();//закрываем его
                         bufferedReaderList.remove(reader);//чистим лист
                         bufferMap.remove(reader);//чистим мапу
                         finishedBufferedReader++;//один поток буфера завершен
@@ -86,12 +101,12 @@ public class IntegerSortMethodImpl implements SortMethod {
                             "' error message: " + e.getMessage());
                 }
             }
-            if (integerList.size() == 1000) {
-                writePartOfFiles.write(outputFileName, integerList);
-                integerList.clear();
+            if (integerList.size() == 1000) {//если лист заполен
+                writePartOfFiles.write(outputFileName, integerList);//записываем кусок (на след кусок будет дозапись в конец преведущего)
+                integerList.clear();//чистим наш массив Integer'ов
             }
         }
-        writePartOfFiles.write(outputFileName, integerList);
+        writePartOfFiles.write(outputFileName, integerList);//запись в файл когда массив Integer'ов не дошел до своего лимита а читать уже нечего
     }
 
     public SortingMethod getSortingMethod() {
