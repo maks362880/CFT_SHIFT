@@ -1,7 +1,7 @@
 package reader;
 
 import builder.BuilderImpl;
-import exeption_handling.ExceptionWrongParam;
+import exeptionHandling.ExceptionWrongParam;
 import controller.ClassObjectType;
 import controller.SortingMethod;
 
