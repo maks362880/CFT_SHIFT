@@ -1,11 +1,8 @@
 package sorters;
 
-import DAO.ReadPartOfFiles;
 import DAO.ReadPartOfIntegerFilesImpl;
-import DAO.WritePartOfFiles;
-import DAO.WritePartOfIntegerFilesImpl;
+import DAO.WritePartOfIntegerFiles;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,12 +20,12 @@ public class IntegerSortMethodImpl implements SortMethod {
     @Override
     public List sort(String[] args, int offset) {
         List<Integer> bufferList = new ArrayList<>();
-        ReadPartOfFiles readPartOfFiles = new ReadPartOfIntegerFilesImpl();
+        ReadPartOfIntegerFilesImpl readPartOfFiles = new ReadPartOfIntegerFilesImpl();
         for (int i = offset; i < args.length - 1; i++) {//не забываем что значение (args.length - 1) - это имя выходного файла!
             readPartOfFiles.read(bufferList, args[i], maxPartSizeFileKb);
         }
-        WritePartOfFiles writePartOfFiles = new WritePartOfIntegerFilesImpl();
-        writePartOfFiles.write(args, bufferList);
+        WritePartOfIntegerFiles writePartOfFiles = new WritePartOfIntegerFiles();
+        writePartOfFiles.write(args[args.length - 1], bufferList);
         bufferList.forEach(System.out::println);//test
         return null;
     }
