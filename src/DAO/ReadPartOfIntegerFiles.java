@@ -26,7 +26,6 @@ public class ReadPartOfIntegerFiles {
         } catch (IOException e) {
             new ExceptionWrongParam("Something wrong in file '" + inputFileName +
                     "' error message:\n" + e.getMessage());
-
         }
     }
 }

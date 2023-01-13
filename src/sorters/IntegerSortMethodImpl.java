@@ -28,8 +28,9 @@ public class IntegerSortMethodImpl implements SortMethod {
         WritePartOfIntegerFiles writePartOfFiles = new WritePartOfIntegerFiles();
         writePartOfFiles.write(args[offset], bufferList);
         bufferList.forEach(System.out::println);//test
-
     }
 
-
+    public void setMaxPartSizeFileKb(int maxPartSizeFileKb) {
+        this.maxPartSizeFileKb = maxPartSizeFileKb;
+    }
 }

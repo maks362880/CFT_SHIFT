@@ -1,10 +1,10 @@
-import configReader.ArgsReader;
+import facade.MergeSortFacade;
 
 public class Main {
     public static void main(String[] args) {
-        ArgsReader ar = new ArgsReader(args);
-        ar.setMaxPartFileSizeKb(1024);//optional value
-        ar.start();
+        MergeSortFacade mergeSort = new MergeSortFacade();
+        mergeSort.setMaxPartSizeFileKb(8);
+        mergeSort.start(args);
     }
 
 }
