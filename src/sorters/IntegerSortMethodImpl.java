@@ -36,44 +36,53 @@ public class IntegerSortMethodImpl implements SortMethod {
         // bufferList.forEach(System.out::println);//test
     }
 
-    private void sort(Map<BufferedReader, String> bufferList, SortingMethod sortingMethod) {
-        int minValue = Integer.MAX_VALUE;
-        BufferedReader bufferedReaderWithMinValue;
-        int size = bufferList.size();
-        int finishedBufferedReader = 0;
-        List<Integer> integerList = new ArrayList<>(1000);
-        WritePartOfIntegerFiles writePartOfFiles = new WritePartOfIntegerFiles();
+    private void sort(Map<BufferedReader, String> bufferMap, SortingMethod sortingMethod) {//нужна именно
+        // Map т.к. по значению можно выбрасывать ошибки и писать логи по имени файла
 
-        while (size > finishedBufferedReader) {
-            for (Map.Entry<BufferedReader, String> reader : bufferList.entrySet()) {
+        int minValue = Integer.MAX_VALUE;
+        BufferedReader bufferedReaderWithMinValue;//буферридер с текущим минимальным значением внутри
+        int size = bufferMap.size();// количество буферидеов
+        int finishedBufferedReader = 0;//количество буферридеров из которых взяли все данные
+
+        List<BufferedReader> bufferedReaderList = new ArrayList<>(bufferMap.size());//для простоты работы с потоками из буферридеров
+        //перезапишем их в лист, ошибки можно найти кинув ссылку объекта буфера в мапу и получить оттуда значение
+        for (Map.Entry<BufferedReader, String> reader : bufferMap.entrySet()) {
+            bufferedReaderList.add(reader.getKey());//сама перезапись в лист
+        }
+
+        WritePartOfIntegerFiles writePartOfFiles = new WritePartOfIntegerFiles();//объект с помощью которого запишем выходной файл
+
+        while (size > finishedBufferedReader) {//пока есть незавершенные буферридеры
+            for (BufferedReader reader : bufferedReaderList) {
                 try {
                     try {
-                        int val = Integer.parseInt(reader.getKey().readLine());
+                        int val = Integer.parseInt(reader.readLine());
                         if (val < minValue) {
                             minValue = val;
-                            bufferedReaderWithMinValue = reader.getKey();
+                            bufferedReaderWithMinValue = reader;
                         }
                         System.out.println(val);//test
                         integerList.add(val);
                     } catch (NumberFormatException e) {
-                        new ExceptionAndLogFile("Something wrong in file '" + reader.getValue() +
+                        new ExceptionAndLogFile("Something wrong in file '" + bufferMap.get(reader) +//запросили путь файла через мапу
                                 "' error message: " + e.getMessage());
                     }
 
 
                 } catch (IOException e) {
-                    new ExceptionAndLogFile("Something wrong in file '" + reader.getValue() +
+                    new ExceptionAndLogFile("Something wrong in file '" + bufferMap.get(reader) +
                             "' error message: " + e.getMessage());
                 }
 
                 try {
-                    if (!reader.getKey().ready()) {
-                        reader.getKey().close();
-                        bufferList.remove(reader.getKey());
-                        finishedBufferedReader++;
+                    if (!reader.ready()) {//если буферридер не готов
+                        reader.close();
+                        bufferedReaderList.remove(reader);//чистим лист
+                        bufferMap.remove(reader);//чистим мапу
+                        finishedBufferedReader++;//один поток буфера завершен
                     }
                 } catch (IOException e) {
-                    new ExceptionAndLogFile("Something wrong in file '" + reader.getValue() +
+                    new ExceptionAndLogFile("Something wrong in file '" + bufferMap.get(reader) +
                             "' error message: " + e.getMessage());
                 }
             }
