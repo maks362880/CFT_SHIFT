@@ -19,7 +19,7 @@ public class WritePartOfIntegerFiles {
             bw.flush();
         } catch (IOException e) {
             new ExceptionWrongParam("Something wrong in file '" + outputFileName +
-                    "' error message:\n" + e.getMessage());
+                    "' error message: " + e.getMessage());
         }
     }
 

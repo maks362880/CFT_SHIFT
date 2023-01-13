@@ -20,12 +20,12 @@ public class ReadPartOfIntegerFiles {
                 }
                 catch (NumberFormatException e){
                     new ExceptionWrongParam("Something wrong in file '" + inputFileName +
-                            "' error message:\n" + e.getMessage());
+                            "' error message: " + e.getMessage());
                 }
             }
         } catch (IOException e) {
             new ExceptionWrongParam("Something wrong in file '" + inputFileName +
-                    "' error message:\n" + e.getMessage());
+                    "' error message: " + e.getMessage());
         }
     }
 }
