@@ -16,14 +16,13 @@ public class StringSortMethodImpl implements SortMethod {
 
 
     @Override
-    public List sort(String[] args, int offset) {
+    public void sort(String[] args, int offset) {
         List<String> bufferList = new ArrayList<>();
         for (int i = offset; i < args.length - 1; i++) {//не забываем что значение (args.length - 1) - это имя выходного файла!
             readPartOfFile(bufferList, args[i]);
         }
         writePartOfFiles(args, bufferList);
         bufferList.forEach(System.out::println);//test
-        return null;
     }
 
     private static void writePartOfFiles(String[] args, List<String> bufferList) {//перенести в DAO
