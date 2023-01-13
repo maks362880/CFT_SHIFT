@@ -7,8 +7,8 @@ public class MergeSortFacade {
 
     private int maxPartSizeFileKb = 1024;//default value in kb
     public void start(String[] args) {
-        argsFillOrException argsFillOrException = new argsFillOrException(args);
         BuildAndRunSortMethod buildAndRunSortMethod = new BuildAndRunSortMethod(args,maxPartSizeFileKb);
+        argsFillOrException argsFillOrException = new argsFillOrException(args);
         argsFillOrException.createUseArgs(buildAndRunSortMethod);
         buildAndRunSortMethod.create();
     }
