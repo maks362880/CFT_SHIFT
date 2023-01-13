@@ -20,8 +20,10 @@ public class argsFillOrException {
             case ("-s") -> buildAndRunSortMethod.setClassObjectType(ClassObjectType.String);
             case ("-a") -> buildAndRunSortMethod.setSortingMethod(SortingMethod.Asc);
             case ("-d") -> buildAndRunSortMethod.setSortingMethod(SortingMethod.Desc);
-            default -> new ExceptionAndLogFile("Wrong param '" + args + "' with id " + 0);
-
+            default -> {
+                new ExceptionAndLogFile("Wrong param '" + args[0] + "' with id " + 0);
+                throw new RuntimeException();
+            }
         }
 
         switch (args[1]) {
@@ -44,5 +46,4 @@ public class argsFillOrException {
             default -> buildAndRunSortMethod.setOffset(1);
         }
     }
-
 }
