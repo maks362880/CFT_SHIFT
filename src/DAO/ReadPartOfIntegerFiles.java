@@ -1,5 +1,7 @@
 package DAO;
 
+import exeptionHandling.ExceptionWrongParam;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -13,9 +15,15 @@ public class ReadPartOfIntegerFiles {
                 new FileReader("resource\\" + inputFileName), maxPartSizeFileKb * 1024)) {
             String line;
             while ((line = br.readLine()) != null) {
-                bufferList.add(Integer.parseInt(line));
+                try {
+                    bufferList.add(Integer.parseInt(line));
+                }
+                catch (NumberFormatException e){
+                    new ExceptionWrongParam("Something wrong in file '" + inputFileName + "' error message:\n" + e.getMessage());
+                }
             }
         } catch (IOException e) {
+
             throw new RuntimeException(e);
 
         }
