@@ -1,5 +1,7 @@
 package sorters;
 
+import exeptionHandling.ExceptionWrongParam;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,34 +23,34 @@ public class StringSortMethodImpl implements SortMethod {
         for (int i = offset; i < args.length - 1; i++) {//не забываем что значение (args.length - 1) - это имя выходного файла!
             readPartOfFile(bufferList, args[i]);
         }
-        writePartOfFiles(args, bufferList);
+        writePartOfFiles(args[args.length-1], bufferList);
         bufferList.forEach(System.out::println);//test
     }
 
-    private static void writePartOfFiles(String[] args, List<String> bufferList) {//перенести в DAO
+    private static void writePartOfFiles(String outputFileName, List<String> bufferList) {//перенести в DAO
         try (BufferedWriter bw = new BufferedWriter(
-                new FileWriter("resource\\" + args[args.length - 1], true))) {//true - дописывание в конец файла
+                new FileWriter("resource\\" + outputFileName, true))) {//true - дописывание в конец файла
             for (String val : bufferList) {
                 bw.write(val);
                 bw.newLine();
             }
             bw.flush();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            new ExceptionWrongParam("Something wrong in file '" + outputFileName +
+                    "' error message:\n" + e.getMessage());
         }
     }
 
-    private void readPartOfFile(List<String> bufferList, String args) {//перенести в DAO
+    private void readPartOfFile(List<String> bufferList, String inputFileName) {//перенести в DAO
         try (BufferedReader br = new BufferedReader(
-                new FileReader("resource\\" + args), maxPartSizeFileKb * 1024)) {
+                new FileReader("resource\\" + inputFileName), maxPartSizeFileKb * 1024)) {
             String line;
             while ((line = br.readLine()) != null) {
                 bufferList.add(line);
             }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            new ExceptionWrongParam("Something wrong in file '" + inputFileName +
+                    "' error message:\n" + e.getMessage());
         }
     }
 }

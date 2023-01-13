@@ -1,5 +1,7 @@
 package DAO;
 
+import exeptionHandling.ExceptionWrongParam;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -16,7 +18,8 @@ public class WritePartOfIntegerFiles {
             }
             bw.flush();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            new ExceptionWrongParam("Something wrong in file '" + outputFileName +
+                    "' error message:\n" + e.getMessage());
         }
     }
 

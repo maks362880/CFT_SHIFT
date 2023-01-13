@@ -19,12 +19,13 @@ public class ReadPartOfIntegerFiles {
                     bufferList.add(Integer.parseInt(line));
                 }
                 catch (NumberFormatException e){
-                    new ExceptionWrongParam("Something wrong in file '" + inputFileName + "' error message:\n" + e.getMessage());
+                    new ExceptionWrongParam("Something wrong in file '" + inputFileName +
+                            "' error message:\n" + e.getMessage());
                 }
             }
         } catch (IOException e) {
-
-            throw new RuntimeException(e);
+            new ExceptionWrongParam("Something wrong in file '" + inputFileName +
+                    "' error message:\n" + e.getMessage());
 
         }
     }
