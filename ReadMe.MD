@@ -17,7 +17,7 @@
 ## Пример:
 
 Значения args:
-in1.txt in2.txt in3.txt out.txt
+-i out.txt in1.txt in2.txt in3.txt
 
 ### Содержимое in1.txt
 1
