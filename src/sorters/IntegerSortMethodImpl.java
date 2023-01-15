@@ -60,7 +60,7 @@ public class IntegerSortMethodImpl implements SortMethod {
                         if (mbr.ready()) {
                             mbr.readLine();
                         } else {
-                            System.out.println("Stream " + mbr.getNameOfFile() + " is closed");
+                            System.out.println("     Stream " + mbr.getNameOfFile() + " is closed");
                             mbr.close();//закрываем его
                             mbrReadyToDelete = mbr;//ставим метку т.к. в итерраторе удалять запрещено
                             finishedModBufferedReader++;//один поток буфера завершен
@@ -72,10 +72,10 @@ public class IntegerSortMethodImpl implements SortMethod {
                 }
                 if (mbr.getCurrentIntValue() != null) {
                     int val = mbr.getCurrentIntValue();
-                        if (val < minValue) {
-                            minValue = val;
-                            mBufferedReaderWithMinValue = mbr;
-                        }
+                    if (val < minValue) {
+                        minValue = val;
+                        mBufferedReaderWithMinValue = mbr;
+                    }
                 }
             }
             if (mbrReadyToDelete != null) {
@@ -84,7 +84,7 @@ public class IntegerSortMethodImpl implements SortMethod {
             }
             try {
                 if (!mBufferedReaderWithMinValue.ready()) {//если буферридер не готов
-                    System.out.println("Stream " + mBufferedReaderWithMinValue.getNameOfFile() + " is closed");
+                    System.out.println("     Stream " + mBufferedReaderWithMinValue.getNameOfFile() + " is closed");
                     mBufferedReaderWithMinValue.close();//закрываем его
                     modifiedBufferedReaderList.remove(mBufferedReaderWithMinValue);//чистим лист
                     finishedModBufferedReader++;//один поток буфера завершен
@@ -95,22 +95,22 @@ public class IntegerSortMethodImpl implements SortMethod {
                 new ExceptionAndLogFile("Something wrong in file '" + mBufferedReaderWithMinValue.getNameOfFile() +
                         "' error message: " + e.getMessage());
             }
-                if (minValue < preLastMinValue) {
-                    new ExceptionAndLogFile("Error value '" + minValue + "' in file: '"
-                            + mBufferedReaderWithMinValue.getNameOfFile() + "' in Row: '"
-                            + mBufferedReaderWithMinValue.getRowsCount() + "'  value '" + minValue
-                            + "' must be grater than '" + preLastMinValue + "'");
-                } else {
-                    try {
-                        System.out.println(minValue);//test
-                        writeStream.write(String.valueOf(minValue));
-                        writeStream.newLine();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+            if (minValue < preLastMinValue) {
+                new ExceptionAndLogFile("Error value '" + minValue + "' in file: '"
+                        + mBufferedReaderWithMinValue.getNameOfFile() + "' in Row: '"
+                        + mBufferedReaderWithMinValue.getRowsCount() + "'  value '" + minValue
+                        + "' must be grater than '" + preLastMinValue + "'");
+            } else {
+                try {
+                    System.out.println(minValue);//test
+                    writeStream.write(String.valueOf(minValue));
+                    writeStream.newLine();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
-                preLastMinValue = minValue;
-                minValue = Integer.MAX_VALUE;
+            }
+            preLastMinValue = minValue;
+            minValue = Integer.MAX_VALUE;
         }
         try {
             writeStream.flush();
@@ -139,7 +139,7 @@ public class IntegerSortMethodImpl implements SortMethod {
                         if (mbr.ready()) {
                             mbr.readLine();
                         } else {
-                            System.out.println("Stream " + mbr.getNameOfFile() + " is closed");
+                            System.out.println("     Stream " + mbr.getNameOfFile() + " is closed");
                             mbr.close();//закрываем его
                             mbrReadyToDelete = mbr;//ставим метку т.к. в итерраторе удалять запрещено
                             finishedModBufferedReader++;//один поток буфера завершен
@@ -151,10 +151,10 @@ public class IntegerSortMethodImpl implements SortMethod {
                 }
                 if (mbr.getCurrentIntValue() != null) {
                     int val = mbr.getCurrentIntValue();
-                        if (val > maxValue) {
-                            maxValue = val;
-                            mBufferedReaderWithMaxValue = mbr;
-                        }
+                    if (val > maxValue) {
+                        maxValue = val;
+                        mBufferedReaderWithMaxValue = mbr;
+                    }
                 }
             }
             if (mbrReadyToDelete != null) {
@@ -162,9 +162,9 @@ public class IntegerSortMethodImpl implements SortMethod {
                 mbrReadyToDelete = null;
             }
             try {
-                    System.out.println(maxValue);//test
+                System.out.println(maxValue);//test
                 if (!mBufferedReaderWithMaxValue.ready()) {//если буферридер не готов
-                    System.out.println("Stream " + mBufferedReaderWithMaxValue.getNameOfFile() + " is closed");
+                    System.out.println("     Stream " + mBufferedReaderWithMaxValue.getNameOfFile() + " is closed");
                     mBufferedReaderWithMaxValue.close();//закрываем его
                     modifiedBufferedReaderList.remove(mBufferedReaderWithMaxValue);//чистим лист
                     finishedModBufferedReader++;//один поток буфера завершен
@@ -175,22 +175,22 @@ public class IntegerSortMethodImpl implements SortMethod {
                 new ExceptionAndLogFile("Something wrong in file '" + mBufferedReaderWithMaxValue.getNameOfFile() +
                         "' error message: " + e.getMessage());
             }
-                if (maxValue > preLastMaxValue) {
-                    new ExceptionAndLogFile("Error value '" + maxValue + "' in file: '"
-                            + mBufferedReaderWithMaxValue.getNameOfFile() + "' in Row: '"
-                            + mBufferedReaderWithMaxValue.getRowsCount() + "'  value '" + maxValue
-                            + "' must be less than '" + preLastMaxValue + "'");
-                } else {
-                    try {
-                        writeStream.write(String.valueOf(maxValue));
-                        writeStream.newLine();
+            if (maxValue > preLastMaxValue) {
+                new ExceptionAndLogFile("Error value '" + maxValue + "' in file: '"
+                        + mBufferedReaderWithMaxValue.getNameOfFile() + "' in Row: '"
+                        + mBufferedReaderWithMaxValue.getRowsCount() + "'  value '" + maxValue
+                        + "' must be less than '" + preLastMaxValue + "'");
+            } else {
+                try {
+                    writeStream.write(String.valueOf(maxValue));
+                    writeStream.newLine();
 
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
-                preLastMaxValue = maxValue;
-                maxValue = Integer.MIN_VALUE;
+            }
+            preLastMaxValue = maxValue;
+            maxValue = Integer.MIN_VALUE;
         }
         try {
             writeStream.flush();
@@ -198,12 +198,6 @@ public class IntegerSortMethodImpl implements SortMethod {
             throw new RuntimeException(e);
         }
     }
-
-
-
-
-
-
 
 
     private WriteFiles getOutputStream() {
