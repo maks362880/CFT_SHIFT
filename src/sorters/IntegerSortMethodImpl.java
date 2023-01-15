@@ -40,7 +40,7 @@ public class IntegerSortMethodImpl implements SortMethod {
         // Map т.к. по значению можно выбрасывать ошибки и писать логи по имени файла
 
         int minValue = Integer.MAX_VALUE;
-        int preLastMinValue = Integer.MAX_VALUE;
+        int preLastMinValue = Integer.MIN_VALUE;
         ModifiedBufferedReader mBufferedReaderWithMinValue = null;//буферридер с текущим минимальным значением внутри
         ModifiedBufferedReader mbrReadyToDelete = null;//буфферидер с пометкой на удаление
         int size = modifiedBufferedReaderList.size();// количество буферидеов
@@ -82,14 +82,14 @@ public class IntegerSortMethodImpl implements SortMethod {
             try {
                 if (!mBufferedReaderWithMinValue.isClose()) {
                     System.out.println(minValue);//test
-                    mBufferedReaderWithMinValue.readLine();
+
                 }
                 if (!mBufferedReaderWithMinValue.ready()) {//если буферридер не готов
                     System.out.println("Stream " + mBufferedReaderWithMinValue.getNameOfFile() + " is closed");
                     mBufferedReaderWithMinValue.close();//закрываем его
                     modifiedBufferedReaderList.remove(mBufferedReaderWithMinValue);//чистим лист
                     finishedModBufferedReader++;//один поток буфера завершен
-                }
+                }else {mBufferedReaderWithMinValue.readLine();}
             } catch (IOException e) {
                 new ExceptionAndLogFile("Something wrong in file '" + mBufferedReaderWithMinValue.getNameOfFile() +
                         "' error message: " + e.getMessage());
