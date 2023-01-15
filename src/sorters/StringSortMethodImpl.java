@@ -1,8 +1,12 @@
 package sorters;
 
-import readAndWrite.ReadPartFiles;
+import readAndWrite.BufferedReadFiles;
+import readAndWrite.ModifiedBufferedReader;
+
 import java.io.BufferedReader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class StringSortMethodImpl implements SortMethod {
@@ -19,13 +23,12 @@ public class StringSortMethodImpl implements SortMethod {
     @Override
     public void startMethod(String[] args, int offset) {
         this.outputFileName = args[offset];
-        Map<BufferedReader, String> bufferList = new HashMap<>();
+        List<ModifiedBufferedReader> mBufferList = new ArrayList<>();
 
-        ReadPartFiles readPartOfFiles = new ReadPartFiles();
+        BufferedReadFiles bufferedReadOfFiles = new BufferedReadFiles();
         for (int i = offset + 1; i < args.length; i++) {
-            readPartOfFiles.read(bufferList, args[i], maxPartSizeFileKb);
+            bufferedReadOfFiles.read(mBufferList, args[i], maxPartSizeFileKb);
         }
-        sort(bufferList, sortingMethod);
 
 
 //        List<String> bufferList = new ArrayList<>();
