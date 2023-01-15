@@ -1,10 +1,14 @@
 package readAndWrite;
 
+import exeptionHandling.ExceptionAndLogFile;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 
 public class ModifiedBufferedReader extends BufferedReader {
+    public boolean isClose = false;
+
     public ModifiedBufferedReader(Reader in, int sz) {
         super(in, sz);
     }
@@ -12,7 +16,7 @@ public class ModifiedBufferedReader extends BufferedReader {
     @Override
     public String readLine() throws IOException {
         this.rowsCount++;
-        return currentValue = super.readLine();
+        return currentStringValue = super.readLine();
     }
 
     public ModifiedBufferedReader(Reader in) {
@@ -20,7 +24,8 @@ public class ModifiedBufferedReader extends BufferedReader {
     }
 
     private int rowsCount = 0;
-    private String currentValue;
+    private Integer currentIntValue;
+    private String currentStringValue;
     private String nameOfFile;
 
     public int getRowsCount() {
@@ -31,12 +36,12 @@ public class ModifiedBufferedReader extends BufferedReader {
         this.rowsCount = rowsCount;
     }
 
-    public String getCurrentValue() {
-        return currentValue;
+    public String getCurrentStringValue() {
+        return currentStringValue;
     }
 
-    public void setCurrentValue(String currentValue) {
-        this.currentValue = currentValue;
+    public void setCurrentStringValue(String currentStringValue) {
+        this.currentStringValue = currentStringValue;
     }
 
     public String getNameOfFile() {
@@ -45,5 +50,27 @@ public class ModifiedBufferedReader extends BufferedReader {
 
     public void setNameOfFile(String nameOfFile) {
         this.nameOfFile = nameOfFile;
+    }
+
+    public Integer getCurrentIntValue() {
+        try {
+            this.currentIntValue = Integer.parseInt(currentStringValue);
+        }catch (NumberFormatException e) {
+            new ExceptionAndLogFile("Something wrong in file '" + this.nameOfFile +//это ошибка если значение НЕ int. Запишется в лог файл (запросили путь к файлу через мапу)
+                    "' error message: " + e.getMessage() + " in row: " + this.rowsCount);
+            currentIntValue = null;
+        }
+
+        return currentIntValue;
+    }
+
+    public boolean isClose() {
+        return isClose;
+    }
+
+    @Override
+    public void close() throws IOException {
+        isClose = true;
+        super.close();
     }
 }
