@@ -8,7 +8,10 @@ import java.io.Reader;
 
 public class ModifiedBufferedReader extends BufferedReader {
     public boolean isClose = false;
-
+    private int rowsCount = 0;
+    private Integer currentIntValue;
+    private String currentStringValue;
+    private String nameOfFile;
     public ModifiedBufferedReader(Reader in, int sz) {
         super(in, sz);
     }
@@ -22,11 +25,6 @@ public class ModifiedBufferedReader extends BufferedReader {
     public ModifiedBufferedReader(Reader in) {
         super(in);
     }
-
-    private int rowsCount = 0;
-    private Integer currentIntValue;
-    private String currentStringValue;
-    private String nameOfFile;
 
     public int getRowsCount() {
         return rowsCount;

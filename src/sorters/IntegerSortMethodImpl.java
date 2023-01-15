@@ -3,8 +3,9 @@ package sorters;
 import exeptionHandling.ExceptionAndLogFile;
 import readAndWrite.ModifiedBufferedReader;
 import readAndWrite.BufferedReadFiles;
-import readAndWrite.WritePartOfIntegerFiles;
+import readAndWrite.WriteFiles;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
@@ -21,14 +22,18 @@ public class IntegerSortMethodImpl implements SortMethod {
 
     @Override
     public void startMethod(String[] args, int offset) {
+        List<ModifiedBufferedReader> mBufferList = getModifiedBufferedReaders(args, offset);
+        sort(mBufferList, sortingMethod);
+    }
+
+    private List<ModifiedBufferedReader> getModifiedBufferedReaders(String[] args, int offset) {
         this.outputFileName = args[offset];
         List<ModifiedBufferedReader> mBufferList = new ArrayList<>();
-
         BufferedReadFiles bufferedReadOfFiles = new BufferedReadFiles();
         for (int i = offset + 1; i < args.length; i++) {
             bufferedReadOfFiles.read(mBufferList, args[i], maxPartSizeFileKb);
         }
-        sort(mBufferList, sortingMethod);
+        return mBufferList;
     }
 
     private void sort(List<ModifiedBufferedReader> modifiedBufferedReaderList, SortingMethod sortingMethod) {//нужна именно
@@ -36,20 +41,12 @@ public class IntegerSortMethodImpl implements SortMethod {
 
         int minValue = Integer.MAX_VALUE;
         ModifiedBufferedReader mBufferedReaderWithMinValue = null;//буферридер с текущим минимальным значением внутри
-        ModifiedBufferedReader mbrReadyToDelete = null;//буфферидер с пометкой на удаление
+         ModifiedBufferedReader mbrReadyToDelete = null;//буфферидер с пометкой на удаление
         int size = modifiedBufferedReaderList.size();// количество буферидеов
         int finishedModBufferedReader = 0;//количество буферридеров из которых взяли все данные
-        List<Integer> integerList = new ArrayList<>(1000);//создадим коллекцию которую при заполнении будем
-        // записывать в файл и чистить объем 1000 можно заменить внешним параметром/аргументом
 
-        WritePartOfIntegerFiles writePartOfFiles = new WritePartOfIntegerFiles();//объект с помощью которого запишем выходной файл
-        for (ModifiedBufferedReader mBuff : modifiedBufferedReaderList) {
-            try {
-                mBuff.readLine();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        WriteFiles writeStream = getOutputStream();
+        getFirstElementsInAllModifiedBufferedList(modifiedBufferedReaderList);
 
         while (size > finishedModBufferedReader) {//пока есть незавершенные буферридеры
             for (ModifiedBufferedReader mbr : modifiedBufferedReaderList) {
@@ -67,8 +64,9 @@ public class IntegerSortMethodImpl implements SortMethod {
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
+
                 }
-                if (!mbr.isClose() && mbr.getCurrentIntValue() != null) {
+                if (mbr.getCurrentIntValue() != null) {
                     int val = mbr.getCurrentIntValue();
                     if (val < minValue) {
                         minValue = val;
@@ -82,7 +80,6 @@ public class IntegerSortMethodImpl implements SortMethod {
             }
             try {
                 if (!mBufferedReaderWithMinValue.isClose()) {
-                    integerList.add(minValue);
                     System.out.println(minValue);//test
                     mBufferedReaderWithMinValue.readLine();
                 }
@@ -96,15 +93,40 @@ public class IntegerSortMethodImpl implements SortMethod {
                 new ExceptionAndLogFile("Something wrong in file '" + mBufferedReaderWithMinValue.getNameOfFile() +
                         "' error message: " + e.getMessage());
             }
-            minValue = Integer.MAX_VALUE;
+            try {
+                writeStream.write(String.valueOf(minValue));
+                writeStream.newLine();
 
-            if (integerList.size() == 1000) {//если лист заполен
-                writePartOfFiles.write(outputFileName, integerList);//записываем кусок (на след кусок будет дозапись в конец преведущего)
-                integerList.clear();//чистим наш массив Integer'ов
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-
+            minValue = Integer.MAX_VALUE;
         }
-        writePartOfFiles.write(outputFileName, integerList);//запись в файл когда массив Integer'ов не дошел до своего лимита а читать уже нечего
+        try {
+            writeStream.flush();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private WriteFiles getOutputStream() {
+        WriteFiles writeFile = null;//объект с помощью которого запишем выходной файл
+        try {
+            writeFile = new WriteFiles(new FileWriter("resource\\" + outputFileName));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return writeFile;
+    }
+
+    private static void getFirstElementsInAllModifiedBufferedList(List<ModifiedBufferedReader> modifiedBufferedReaderList) {
+        for (ModifiedBufferedReader mBuff : modifiedBufferedReaderList) {
+            try {
+                mBuff.readLine();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     public SortingMethod getSortingMethod() {
