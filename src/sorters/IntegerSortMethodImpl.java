@@ -40,8 +40,9 @@ public class IntegerSortMethodImpl implements SortMethod {
         // Map т.к. по значению можно выбрасывать ошибки и писать логи по имени файла
 
         int minValue = Integer.MAX_VALUE;
+        int preLastMinValue = Integer.MAX_VALUE;
         ModifiedBufferedReader mBufferedReaderWithMinValue = null;//буферридер с текущим минимальным значением внутри
-         ModifiedBufferedReader mbrReadyToDelete = null;//буфферидер с пометкой на удаление
+        ModifiedBufferedReader mbrReadyToDelete = null;//буфферидер с пометкой на удаление
         int size = modifiedBufferedReaderList.size();// количество буферидеов
         int finishedModBufferedReader = 0;//количество буферридеров из которых взяли все данные
 
@@ -93,13 +94,22 @@ public class IntegerSortMethodImpl implements SortMethod {
                 new ExceptionAndLogFile("Something wrong in file '" + mBufferedReaderWithMinValue.getNameOfFile() +
                         "' error message: " + e.getMessage());
             }
-            try {
-                writeStream.write(String.valueOf(minValue));
-                writeStream.newLine();
 
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            if (minValue < preLastMinValue) {
+                new ExceptionAndLogFile("Error value '" + minValue + "' in file: '"
+                        + mBufferedReaderWithMinValue.getNameOfFile() + "' in Row: '"
+                        + mBufferedReaderWithMinValue.getRowsCount() + "'  value '" + minValue
+                        + "' must be grater than '" + preLastMinValue + "'");
+            } else {
+                try {
+                    writeStream.write(String.valueOf(minValue));
+                    writeStream.newLine();
+
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
+            preLastMinValue = minValue;
             minValue = Integer.MAX_VALUE;
         }
         try {
