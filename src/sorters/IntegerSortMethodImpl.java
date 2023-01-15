@@ -29,11 +29,6 @@ public class IntegerSortMethodImpl implements SortMethod {
             bufferedReadOfFiles.read(mBufferList, args[i], maxPartSizeFileKb);
         }
         sort(mBufferList, sortingMethod);
-
-
-        // WritePartOfIntegerFiles writePartOfFiles = new WritePartOfIntegerFiles();
-        // writePartOfFiles.write(args[offset], bufferList);
-        // bufferList.forEach(System.out::println);//test
     }
 
     private void sort(List<ModifiedBufferedReader> modifiedBufferedReaderList, SortingMethod sortingMethod) {//нужна именно
@@ -41,6 +36,7 @@ public class IntegerSortMethodImpl implements SortMethod {
 
         int minValue = Integer.MAX_VALUE;
         ModifiedBufferedReader mBufferedReaderWithMinValue = null;//буферридер с текущим минимальным значением внутри
+        ModifiedBufferedReader mbrReadyToDelete = null;//буфферидер с пометкой на удаление
         int size = modifiedBufferedReaderList.size();// количество буферидеов
         int finishedModBufferedReader = 0;//количество буферридеров из которых взяли все данные
         List<Integer> integerList = new ArrayList<>(1000);//создадим коллекцию которую при заполнении будем
@@ -62,8 +58,9 @@ public class IntegerSortMethodImpl implements SortMethod {
                         if (mbr.ready()) {
                             mbr.readLine();
                         } else {
-                            System.out.println("Stream " + mBufferedReaderWithMinValue.getNameOfFile() + " is closed");
+                            System.out.println("Stream " + mbr.getNameOfFile() + " is closed");
                             mbr.close();//закрываем его
+                            mbrReadyToDelete = mbr;//ставим метку т.к. в итерраторе удалять запрещено
                             finishedModBufferedReader++;//один поток буфера завершен
                             break;
                         }
@@ -79,8 +76,12 @@ public class IntegerSortMethodImpl implements SortMethod {
                     }
                 }
             }
+            if (mbrReadyToDelete != null) {
+                modifiedBufferedReaderList.remove(mbrReadyToDelete);
+                mbrReadyToDelete = null;
+            }
             try {
-                if(!mBufferedReaderWithMinValue.isClose()) {
+                if (!mBufferedReaderWithMinValue.isClose()) {
                     integerList.add(minValue);
                     System.out.println(minValue);//test
                     mBufferedReaderWithMinValue.readLine();
@@ -97,10 +98,10 @@ public class IntegerSortMethodImpl implements SortMethod {
             }
             minValue = Integer.MAX_VALUE;
 
-                if (integerList.size() == 1000) {//если лист заполен
-                    writePartOfFiles.write(outputFileName, integerList);//записываем кусок (на след кусок будет дозапись в конец преведущего)
-                    integerList.clear();//чистим наш массив Integer'ов
-                }
+            if (integerList.size() == 1000) {//если лист заполен
+                writePartOfFiles.write(outputFileName, integerList);//записываем кусок (на след кусок будет дозапись в конец преведущего)
+                integerList.clear();//чистим наш массив Integer'ов
+            }
 
         }
         writePartOfFiles.write(outputFileName, integerList);//запись в файл когда массив Integer'ов не дошел до своего лимита а читать уже нечего
