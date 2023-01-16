@@ -2,56 +2,28 @@ package sorters;
 
 import exeptionHandling.ExceptionAndLogFile;
 import readAndWrite.ModifiedBufferedReader;
-import readAndWrite.BufferedReadFiles;
-import readAndWrite.WriteFiles;
 
-import java.io.FileWriter;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.*;
 
-public class IntegerSortMethodImpl implements SortMethod {
+public class IntegerSortMethod {
+    private final List<ModifiedBufferedReader> modifiedBufferedReaderList;
+    private final BufferedWriter bw;
 
-    private final SortingMethod sortingMethod;
-    private final int maxPartSizeFileKb;
-    private String outputFileName;
-
-    public IntegerSortMethodImpl(SortingMethod sortingMethod, int maxPartSizeFileKb) {
-        this.sortingMethod = sortingMethod;
-        this.maxPartSizeFileKb = maxPartSizeFileKb;
+    public IntegerSortMethod(List<ModifiedBufferedReader> modifiedBufferedReaderList, BufferedWriter bw) {
+        this.modifiedBufferedReaderList = modifiedBufferedReaderList;
+        this.bw = bw;
     }
 
-    @Override
-    public void startMethod(String[] args, int offset) {
-        List<ModifiedBufferedReader> mBufferList = getModifiedBufferedReaders(args, offset);
-        if (sortingMethod == SortingMethod.Asc) {
-            SortAsc(mBufferList);
-        }
-        if (sortingMethod == SortingMethod.Desc) {
-            SortDesc(mBufferList);
-        }
-    }
 
-    private List<ModifiedBufferedReader> getModifiedBufferedReaders(String[] args, int offset) {
-        this.outputFileName = args[offset];
-        List<ModifiedBufferedReader> mBufferList = new ArrayList<>();
-        BufferedReadFiles bufferedReadOfFiles = new BufferedReadFiles();
-        for (int i = offset + 1; i < args.length; i++) {
-            bufferedReadOfFiles.read(mBufferList, args[i], maxPartSizeFileKb);
-        }
-        return mBufferList;
-    }
-
-    private void SortAsc(List<ModifiedBufferedReader> modifiedBufferedReaderList) {//нужна именно
-        // Map т.к. по значению можно выбрасывать ошибки и писать логи по имени файла
+    public void sortAsc() {
         int minValue = Integer.MAX_VALUE;
         int preLastMinValue = Integer.MIN_VALUE;
         ModifiedBufferedReader mBufferedReaderWithMinValue = null;//буферридер с текущим минимальным/максимальным значением внутри
         ModifiedBufferedReader mbrReadyToDelete = null;//буфферидер с пометкой на удаление
         int size = modifiedBufferedReaderList.size();// количество буферидеов
         int finishedModBufferedReader = 0;//количество буферридеров из которых взяли все данные
-
-        WriteFiles writeStream = getOutputStream();
-        getFirstElementsInAllModifiedBufferedList(modifiedBufferedReaderList);
 
         while (size > finishedModBufferedReader) {//пока есть незавершенные буферридеры
             for (ModifiedBufferedReader mbr : modifiedBufferedReaderList) {
@@ -103,8 +75,8 @@ public class IntegerSortMethodImpl implements SortMethod {
             } else {
                 try {
                     System.out.println(minValue);//test
-                    writeStream.write(String.valueOf(minValue));
-                    writeStream.newLine();
+                    bw.write(String.valueOf(minValue));
+                    bw.newLine();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -113,24 +85,21 @@ public class IntegerSortMethodImpl implements SortMethod {
             minValue = Integer.MAX_VALUE;
         }
         try {
-            writeStream.flush();
+            bw.flush();
+            bw.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
 
-    private void SortDesc(List<ModifiedBufferedReader> modifiedBufferedReaderList) {//нужна именно
-        // Map т.к. по значению можно выбрасывать ошибки и писать логи по имени файла
+    public void sortDesc() {
         int maxValue = Integer.MIN_VALUE;
         int preLastMaxValue = Integer.MAX_VALUE;
         ModifiedBufferedReader mBufferedReaderWithMaxValue = null;//буферридер с текущим минимальным/максимальным значением внутри
         ModifiedBufferedReader mbrReadyToDelete = null;//буфферидер с пометкой на удаление
         int size = modifiedBufferedReaderList.size();// количество буферидеов
         int finishedModBufferedReader = 0;//количество буферридеров из которых взяли все данные
-
-        WriteFiles writeStream = getOutputStream();
-        getFirstElementsInAllModifiedBufferedList(modifiedBufferedReaderList);
 
         while (size > finishedModBufferedReader) {//пока есть незавершенные буферридеры
             for (ModifiedBufferedReader mbr : modifiedBufferedReaderList) {
@@ -182,8 +151,8 @@ public class IntegerSortMethodImpl implements SortMethod {
                         + "' must be less than '" + preLastMaxValue + "'");
             } else {
                 try {
-                    writeStream.write(String.valueOf(maxValue));
-                    writeStream.newLine();
+                    bw.write(String.valueOf(maxValue));
+                    bw.newLine();
 
                 } catch (IOException e) {
                     throw new RuntimeException(e);
@@ -193,38 +162,10 @@ public class IntegerSortMethodImpl implements SortMethod {
             maxValue = Integer.MIN_VALUE;
         }
         try {
-            writeStream.flush();
+            bw.flush();
+            bw.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-
-    private WriteFiles getOutputStream() {
-        WriteFiles writeFile = null;//объект с помощью которого запишем выходной файл
-        try {
-            writeFile = new WriteFiles(new FileWriter("resource\\" + outputFileName));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return writeFile;
-    }
-
-    private static void getFirstElementsInAllModifiedBufferedList(List<ModifiedBufferedReader> modifiedBufferedReaderList) {
-        for (ModifiedBufferedReader mBuff : modifiedBufferedReaderList) {
-            try {
-                mBuff.readLine();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    public SortingMethod getSortingMethod() {
-        return sortingMethod;
-    }
-
-    public int getMaxPartSizeFileKb() {
-        return maxPartSizeFileKb;
     }
 }
