@@ -13,8 +13,8 @@ public class StringSortMethod {
     private final List<ModifiedBufferedReader> modifiedBufferedReaderList;
     private final BufferedWriter bw;
 
-   private final TreeMap<String, ModifiedBufferedReader> firstCorrectElements = new TreeMap<>();
-   private final TreeMap<String, ModifiedBufferedReader> secondCorrectElements = new TreeMap<>();
+    private final TreeMap<String, ModifiedBufferedReader> firstCorrectElements = new TreeMap<>();
+    private final TreeMap<String, ModifiedBufferedReader> secondCorrectElements = new TreeMap<>();
 
     public StringSortMethod(List<ModifiedBufferedReader> modifiedBufferedReaderList, BufferedWriter bw) {
         this.modifiedBufferedReaderList = modifiedBufferedReaderList;
@@ -31,10 +31,10 @@ public class StringSortMethod {
         firstCorrectElements.clear();
         while (sizeOfMbrList > finishedReaders) {
             getCorrectElements(firstCorrectElements);
-            finishedReaders = mbrCloseOrNext(firstCorrectElements.firstEntry().getValue(),finishedReaders);
+            finishedReaders = mbrCloseOrNext(firstCorrectElements.firstEntry().getValue(), finishedReaders);
             if (finishedReaders != sizeOfMbrList) {
                 getCorrectElements(secondCorrectElements);
-                checkCorrectSortDataAsc(secondCorrectElements.firstKey(),firstCorrectElements.firstKey(),
+                checkCorrectSortDataAsc(secondCorrectElements.firstKey(), firstCorrectElements.firstKey(),
                         firstCorrectElements.firstEntry().getValue());
                 firstCorrectElements.clear();
                 secondCorrectElements.clear();
@@ -60,6 +60,7 @@ public class StringSortMethod {
 
 
     private void getCorrectElements(TreeMap<String, ModifiedBufferedReader> result) {
+        ModifiedBufferedReader emptyMbr = null;
         while (result.isEmpty()) {
             for (ModifiedBufferedReader mbr : modifiedBufferedReaderList) {
                 if (mbr.getCurrentStringValueOrNullIfSpaceChar() != null) {
@@ -70,10 +71,17 @@ public class StringSortMethod {
                                 + mbr.getErrorStringValue() + "' in stream: '"
                                 + mbr.getNameOfFile() + "' in row: '" + mbr.getRowsCount() + "'");
                         mbr.readLine();
+                        if (!mbr.ready()) {
+                            emptyMbr = mbr;
+                            System.out.println("     Stream " + emptyMbr.getNameOfFile() + " is closed");
+                        }
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
                 }
+            }
+            if (emptyMbr != null) {
+                modifiedBufferedReaderList.remove(emptyMbr);
             }
         }
     }
@@ -86,10 +94,10 @@ public class StringSortMethod {
         firstCorrectElements.clear();
         while (sizeOfMbrList > finishedReaders) {
             getCorrectElements(firstCorrectElements);
-            finishedReaders = mbrCloseOrNext(firstCorrectElements.lastEntry().getValue(),finishedReaders);
+            finishedReaders = mbrCloseOrNext(firstCorrectElements.lastEntry().getValue(), finishedReaders);
             if (finishedReaders != sizeOfMbrList) {
                 getCorrectElements(secondCorrectElements);
-                checkCorrectSortDataDesc(secondCorrectElements.lastKey(),firstCorrectElements.lastKey(),
+                checkCorrectSortDataDesc(secondCorrectElements.lastKey(), firstCorrectElements.lastKey(),
                         firstCorrectElements.lastEntry().getValue());
                 firstCorrectElements.clear();
                 secondCorrectElements.clear();
