@@ -12,6 +12,8 @@ public class ModifiedBufferedReader extends BufferedReader {
     private Integer currentIntValue;
     private String currentStringValue;
     private String nameOfFile;
+    private String errorStringValue;
+
     public ModifiedBufferedReader(Reader in, int sz) {
         super(in, sz);
     }
@@ -35,6 +37,10 @@ public class ModifiedBufferedReader extends BufferedReader {
     }
 
     public String getCurrentStringValue() {
+        if(currentStringValue.contains(" ")){
+            errorStringValue = currentStringValue;
+            return null;
+        }
         return currentStringValue;
     }
 
@@ -70,5 +76,9 @@ public class ModifiedBufferedReader extends BufferedReader {
     public void close() throws IOException {
         isClose = true;
         super.close();
+    }
+
+    public String getErrorStringValue() {
+        return errorStringValue;
     }
 }
