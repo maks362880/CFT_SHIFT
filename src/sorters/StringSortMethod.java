@@ -84,7 +84,7 @@ public class StringSortMethod {
                 while (mbr.getCurrentStringValue() == null && !mbr.isClose()) {
                     try {
                         if (mbr.ready()) {
-                            new ExceptionAndLogFile("  Error string '"
+                            new ExceptionAndLogFile("Invalid string error '"
                                     + mbr.getErrorStringValue() + "' in stream: '"
                                     + mbr.getNameOfFile() + "' in row: '"+mbr.getRowsCount()+"'");
                             mbr.readLine();
