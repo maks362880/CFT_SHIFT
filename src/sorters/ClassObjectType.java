@@ -1,5 +1,5 @@
 package sorters;
 
 public enum ClassObjectType {
-    Integer,String
+    Integer,String,Exception
 }

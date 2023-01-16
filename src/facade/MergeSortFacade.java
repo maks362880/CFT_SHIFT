@@ -5,7 +5,7 @@ import configReader.argsFillOrException;
 
 public class MergeSortFacade {
 
-    private int maxPartSizeFileKb = 1024;//default value in kb
+    private int maxPartSizeFileKb = 8;//default value in kb in bufferedreader
     public void start(String[] args) {
         BuildAndRunSortMethod buildAndRunSortMethod = new BuildAndRunSortMethod(args,maxPartSizeFileKb);
         argsFillOrException argsFillOrException = new argsFillOrException(args);

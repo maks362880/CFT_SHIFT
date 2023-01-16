@@ -16,22 +16,17 @@ public class BuildAndRunSortMethod {
     private SortingMethod sortingMethod = SortingMethod.Asc;//default ASC - возрастание
 
     public void create() {
-//        if (classObjectType == ClassObjectType.Integer) {
-//            SortMethod sortMethod = new IntegerSortMethodImpl(sortingMethod, maxPartSizeFileKb);
-//            sortMethod.startMethod(args, offset);
-//        } else if (classObjectType == ClassObjectType.String) {
-//            SortMethod sortMethod = new StringSortMethodImpl(sortingMethod, maxPartSizeFileKb);
-//            sortMethod.startMethod(args, offset);
-//        }
-
-
         List<ModifiedBufferedReader> modifiedBufferedReaderList = getModifiedBufferedReaders(args, offset);
         getFirstElementsInAllModifiedBufferedList(modifiedBufferedReaderList);
 
         BufferedWriter bw = getOutputStream(args[offset]);
 
+        if (classObjectType == ClassObjectType.Exception) {
+            new ExceptionAndLogFile("Necessary args is not found");
+        }
+
         if (classObjectType == ClassObjectType.Integer) {
-            IntegerSortMethod sortMethod = new IntegerSortMethod(modifiedBufferedReaderList,bw);
+            IntegerSortMethod sortMethod = new IntegerSortMethod(modifiedBufferedReaderList, bw);
             if (sortingMethod == SortingMethod.Asc) {
                 sortMethod.sortAsc();
             } else if (sortingMethod == SortingMethod.Desc) {
@@ -40,7 +35,7 @@ public class BuildAndRunSortMethod {
         }
 
         if (classObjectType == ClassObjectType.String) {
-            StringSortMethod sortMethod = new StringSortMethod(modifiedBufferedReaderList,bw);
+            StringSortMethod sortMethod = new StringSortMethod(modifiedBufferedReaderList, bw);
             if (sortingMethod == SortingMethod.Asc) {
                 sortMethod.sortAsc();
             } else if (sortingMethod == SortingMethod.Desc) {
@@ -60,7 +55,6 @@ public class BuildAndRunSortMethod {
     }
 
 
-
     private void getFirstElementsInAllModifiedBufferedList(List<ModifiedBufferedReader> modifiedBufferedReaderList) {
         for (ModifiedBufferedReader mBuff : modifiedBufferedReaderList) {
             try {
@@ -70,7 +64,6 @@ public class BuildAndRunSortMethod {
             }
         }
     }
-
 
 
     private BufferedWriter getOutputStream(String outputFileName) {
@@ -105,7 +98,7 @@ public class BuildAndRunSortMethod {
     private final String[] args;
     private final int maxPartSizeFileKb;
     private int offset;
-    private ClassObjectType classObjectType;
+    private ClassObjectType classObjectType = ClassObjectType.Exception;
 
     public ClassObjectType getClassObjectType() {
         return classObjectType;
