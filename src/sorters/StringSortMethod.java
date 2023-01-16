@@ -6,6 +6,8 @@ import readAndWrite.ModifiedBufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.List;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 public class StringSortMethod {
 
@@ -19,9 +21,9 @@ public class StringSortMethod {
     }
 
     public void sortAsc() {
-
-        String ascValue = modifiedBufferedReaderList.get(0).getCurrentStringValue();//??
-        String preLastAscValue = modifiedBufferedReaderList.get(0).getCurrentStringValue();//??
+        String firstMaxElement = getFirstMaxElement();
+        String ascValue = firstMaxElement;
+        String preLastAscValue = firstMaxElement;
 
         ModifiedBufferedReader mbrReadyToDelete = null;
         ModifiedBufferedReader mbrSorted = modifiedBufferedReaderList.get(0);
@@ -30,12 +32,12 @@ public class StringSortMethod {
 
         while (size > finishedModBufferedReader) {
             for (ModifiedBufferedReader mbr : modifiedBufferedReaderList) {
-                while (mbr.getCurrentStringValue() == null && !mbr.isClose()) {
+                while (mbr.getCurrentStringValueOrNullIfSpaceChar() == null && !mbr.isClose()) {
                     try {
                         if (mbr.ready()) {
                             new ExceptionAndLogFile("  Error string '"
                                     + mbr.getErrorStringValue() + "' in stream: '"
-                                    + mbr.getNameOfFile() + "' in row: '"+mbr.getRowsCount()+"'");
+                                    + mbr.getNameOfFile() + "' in row: '" + mbr.getRowsCount() + "'");
                             mbr.readLine();
                         } else {
                             System.out.println("     Stream " + mbr.getNameOfFile() + " is closed");
@@ -48,7 +50,7 @@ public class StringSortMethod {
                         throw new RuntimeException(e);
                     }
                 }
-                String val = mbr.getCurrentStringValue();
+                String val = mbr.getCurrentStringValueOrNullIfSpaceChar();
                 if (val.compareTo(ascValue) < 0) {//сравнить строки
                     ascValue = val;
                     mbrSorted = mbr;
@@ -59,7 +61,7 @@ public class StringSortMethod {
             finishedModBufferedReader = mbrCloseOrNext(mbrSorted, finishedModBufferedReader);
             checkCorrectSortDataAsc(ascValue, preLastAscValue, mbrSorted);
             preLastAscValue = ascValue;
-            ascValue = "zzzzzzzzzzzzzzzzzzzzzzz";
+            ascValue = "zzzzzzzzzzzzzzzzzzzzzzzzzz";
         }
         try {
             bw.flush();
@@ -69,10 +71,25 @@ public class StringSortMethod {
         }
     }
 
-    public void sortDesc() {
+    private String getFirstMaxElement() {
+        TreeMap<String,ModifiedBufferedReader> result = new TreeMap<>();
+        for (ModifiedBufferedReader mbr : modifiedBufferedReaderList) {
+            if (mbr.getCurrentStringValueOrNullIfSpaceChar() != null) {
+                result.put(mbr.getCurrentStringValueOrNullIfSpaceChar(),mbr);
+            }
+        }
+        try {
+            result.firstEntry().getValue().readLine();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return result.firstEntry().getKey();
+    }
 
-        String descValue = modifiedBufferedReaderList.get(0).getCurrentStringValue();//??
-        String preLastAscValue = modifiedBufferedReaderList.get(0).getCurrentStringValue();//??
+    public void sortDesc() {
+        String firsMinElement = getFirstMinElement();
+        String descValue = firsMinElement;
+        String preLastAscValue = firsMinElement;
 
         ModifiedBufferedReader mbrReadyToDelete = null;
         ModifiedBufferedReader mbrSorted = modifiedBufferedReaderList.get(0);
@@ -81,12 +98,12 @@ public class StringSortMethod {
 
         while (size > finishedModBufferedReader) {
             for (ModifiedBufferedReader mbr : modifiedBufferedReaderList) {
-                while (mbr.getCurrentStringValue() == null && !mbr.isClose()) {
+                while (mbr.getCurrentStringValueOrNullIfSpaceChar() == null && !mbr.isClose()) {
                     try {
                         if (mbr.ready()) {
                             new ExceptionAndLogFile("Invalid string error '"
                                     + mbr.getErrorStringValue() + "' in stream: '"
-                                    + mbr.getNameOfFile() + "' in row: '"+mbr.getRowsCount()+"'");
+                                    + mbr.getNameOfFile() + "' in row: '" + mbr.getRowsCount() + "'");
                             mbr.readLine();
                         } else {
                             System.out.println("     Stream " + mbr.getNameOfFile() + " is closed");
@@ -99,7 +116,7 @@ public class StringSortMethod {
                         throw new RuntimeException(e);
                     }
                 }
-                String val = mbr.getCurrentStringValue();
+                String val = mbr.getCurrentStringValueOrNullIfSpaceChar();
                 if (val.compareTo(descValue) > 0) {//сравнить строки
                     descValue = val;
                     mbrSorted = mbr;
@@ -110,7 +127,7 @@ public class StringSortMethod {
             finishedModBufferedReader = mbrCloseOrNext(mbrSorted, finishedModBufferedReader);
             checkCorrectSortDataDesc(descValue, preLastAscValue, mbrSorted);
             preLastAscValue = descValue;
-            descValue = "aaaaaaaaaaaaaaaaaaaaaaaa";
+            descValue = "aaaaaaaaaaaaaaaaaaaaaaaaaaa";
         }
         try {
             bw.flush();
@@ -118,6 +135,21 @@ public class StringSortMethod {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private String getFirstMinElement() {
+        TreeMap<String,ModifiedBufferedReader> result = new TreeMap<>();
+        for (ModifiedBufferedReader mbr : modifiedBufferedReaderList) {
+            if (mbr.getCurrentStringValueOrNullIfSpaceChar() != null) {
+                result.put(mbr.getCurrentStringValueOrNullIfSpaceChar(),mbr);
+            }
+        }
+        try {
+            result.lastEntry().getValue().readLine();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return result.lastEntry().getKey();
     }
 
 

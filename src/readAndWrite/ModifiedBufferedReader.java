@@ -11,6 +11,7 @@ public class ModifiedBufferedReader extends BufferedReader {
     private int rowsCount = 0;
     private Integer currentIntValue;
     private String currentStringValue;
+
     private String nameOfFile;
     private String errorStringValue;
 
@@ -36,7 +37,10 @@ public class ModifiedBufferedReader extends BufferedReader {
         this.rowsCount = rowsCount;
     }
 
-    public String getCurrentStringValue() {
+    public String getCurrentValue() {
+        return currentStringValue;
+    }
+    public String getCurrentStringValueOrNullIfSpaceChar() {
         if(currentStringValue.contains(" ")){
             errorStringValue = currentStringValue;
             return null;
