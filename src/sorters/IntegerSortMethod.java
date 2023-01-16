@@ -50,37 +50,10 @@ public class IntegerSortMethod {
                     }
                 }
             }
-            if (mbrReadyToDelete != null) {
-                modifiedBufferedReaderList.remove(mbrReadyToDelete);
-                mbrReadyToDelete = null;
-            }
-            try {
-                if (!mBufferedReaderWithMinValue.ready()) {//если буферридер не готов
-                    System.out.println("     Stream " + mBufferedReaderWithMinValue.getNameOfFile() + " is closed");
-                    mBufferedReaderWithMinValue.close();//закрываем его
-                    modifiedBufferedReaderList.remove(mBufferedReaderWithMinValue);//чистим лист
-                    finishedModBufferedReader++;//один поток буфера завершен
-                } else {
-                    mBufferedReaderWithMinValue.readLine();
-                }
-            } catch (IOException e) {
-                new ExceptionAndLogFile("Something wrong in file '" + mBufferedReaderWithMinValue.getNameOfFile() +
-                        "' error message: " + e.getMessage());
-            }
-            if (minValue < preLastMinValue) {
-                new ExceptionAndLogFile("Error value '" + minValue + "' in file: '"
-                        + mBufferedReaderWithMinValue.getNameOfFile() + "' in Row: '"
-                        + mBufferedReaderWithMinValue.getRowsCount() + "'  value '" + minValue
-                        + "' must be grater than '" + preLastMinValue + "'");
-            } else {
-                try {
-                    System.out.println(minValue);//test
-                    bw.write(String.valueOf(minValue));
-                    bw.newLine();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+            deleteFinishMbrAfterIterator(mbrReadyToDelete);
+            mbrReadyToDelete = null;
+            finishedModBufferedReader = mbrCloseOrNext(mBufferedReaderWithMinValue, finishedModBufferedReader);
+            checkCorrectSortDataAsc(minValue, preLastMinValue, mBufferedReaderWithMinValue);
             preLastMinValue = minValue;
             minValue = Integer.MAX_VALUE;
         }
@@ -126,38 +99,12 @@ public class IntegerSortMethod {
                     }
                 }
             }
-            if (mbrReadyToDelete != null) {
-                modifiedBufferedReaderList.remove(mbrReadyToDelete);
-                mbrReadyToDelete = null;
-            }
-            try {
-                System.out.println(maxValue);//test
-                if (!mBufferedReaderWithMaxValue.ready()) {//если буферридер не готов
-                    System.out.println("     Stream " + mBufferedReaderWithMaxValue.getNameOfFile() + " is closed");
-                    mBufferedReaderWithMaxValue.close();//закрываем его
-                    modifiedBufferedReaderList.remove(mBufferedReaderWithMaxValue);//чистим лист
-                    finishedModBufferedReader++;//один поток буфера завершен
-                } else {
-                    mBufferedReaderWithMaxValue.readLine();
-                }
-            } catch (IOException e) {
-                new ExceptionAndLogFile("Something wrong in file '" + mBufferedReaderWithMaxValue.getNameOfFile() +
-                        "' error message: " + e.getMessage());
-            }
-            if (maxValue > preLastMaxValue) {
-                new ExceptionAndLogFile("Error value '" + maxValue + "' in file: '"
-                        + mBufferedReaderWithMaxValue.getNameOfFile() + "' in Row: '"
-                        + mBufferedReaderWithMaxValue.getRowsCount() + "'  value '" + maxValue
-                        + "' must be less than '" + preLastMaxValue + "'");
-            } else {
-                try {
-                    bw.write(String.valueOf(maxValue));
-                    bw.newLine();
+            deleteFinishMbrAfterIterator(mbrReadyToDelete);
+            mbrReadyToDelete = null;
+            finishedModBufferedReader = mbrCloseOrNext(mBufferedReaderWithMaxValue, finishedModBufferedReader);
 
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+            checkCorrectSortDataDesc(maxValue, preLastMaxValue, mBufferedReaderWithMaxValue);
+
             preLastMaxValue = maxValue;
             maxValue = Integer.MIN_VALUE;
         }
@@ -168,4 +115,65 @@ public class IntegerSortMethod {
             throw new RuntimeException(e);
         }
     }
+
+
+    private void deleteFinishMbrAfterIterator(ModifiedBufferedReader mbrReadyToDelete) {
+        if (mbrReadyToDelete != null) {
+            modifiedBufferedReaderList.remove(mbrReadyToDelete);
+        }
+    }
+
+    private int mbrCloseOrNext(ModifiedBufferedReader mbr, int finishedModBufferedReader) {
+        try {
+            if (!mbr.ready()) {//если буферридер не готов
+                System.out.println("     Stream " + mbr.getNameOfFile() + " is closed");
+                mbr.close();//закрываем его
+                modifiedBufferedReaderList.remove(mbr);//чистим лист
+                finishedModBufferedReader++;//один поток буфера завершен
+            } else {
+                mbr.readLine();
+            }
+        } catch (IOException e) {
+            new ExceptionAndLogFile("Something wrong in file '" + mbr.getNameOfFile() +
+                    "' error message: " + e.getMessage());
+        }
+        return finishedModBufferedReader;
+    }
+
+    private void checkCorrectSortDataDesc(int maxValue, int preLastMaxValue, ModifiedBufferedReader mBufferedReaderWithMaxValue) {
+        if (maxValue > preLastMaxValue) {
+            new ExceptionAndLogFile("Error value '" + maxValue + "' in file: '"
+                    + mBufferedReaderWithMaxValue.getNameOfFile() + "' in Row: '"
+                    + mBufferedReaderWithMaxValue.getRowsCount() + "'  value '" + maxValue
+                    + "' must be less than '" + preLastMaxValue + "'");
+        } else {
+            try {
+                System.out.println(maxValue);//test
+                bw.write(String.valueOf(maxValue));
+                bw.newLine();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+
+
+    private void checkCorrectSortDataAsc(int minValue, int preLastMinValue, ModifiedBufferedReader mBufferedReaderWithMinValue) {
+        if (minValue < preLastMinValue) {
+            new ExceptionAndLogFile("Error value '" + minValue + "' in file: '"
+                    + mBufferedReaderWithMinValue.getNameOfFile() + "' in Row: '"
+                    + mBufferedReaderWithMinValue.getRowsCount() + "'  value '" + minValue
+                    + "' must be grater than '" + preLastMinValue + "'");
+        } else {
+            try {
+                System.out.println(minValue);//test
+                bw.write(String.valueOf(minValue));
+                bw.newLine();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
 }
