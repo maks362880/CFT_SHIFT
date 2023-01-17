@@ -14,17 +14,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class BuildAndRunSortMethodTest {
 
-//    @BeforeEach
-//    void setUp() {
-//    }
-//
-//    @AfterEach
-//    void tearDown() {
-//    }
-
-//    @Test
-//    void create() {
-//    }
 
     @Test
     void setClassObjectType() {

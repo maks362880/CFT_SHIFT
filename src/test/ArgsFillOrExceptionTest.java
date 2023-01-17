@@ -3,8 +3,6 @@ package test;
 
 import builder.BuildAndRunSortMethod;
 import configReader.ArgsFillOrException;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sorters.ClassObjectType;
 import sorters.SortingMethod;
@@ -13,13 +11,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ArgsFillOrExceptionTest {
 
-//    @BeforeEach
-//    void setUp() {
-//    }
-//
-//    @AfterEach
-//    void tearDown() {
-//    }
 
     @Test
     void createUseArgs() {
