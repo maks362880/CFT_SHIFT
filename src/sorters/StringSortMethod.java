@@ -12,11 +12,12 @@ public class StringSortMethod {
 
     private final List<ModifiedBufferedReader> modifiedBufferedReaderList;
     private final BufferedWriter bw;
-    private  int finishedReaders = 0;
+    private int finishedReaders = 0;
 
     private final TreeMap<String, ModifiedBufferedReader> firstCorrectElements = new TreeMap<>();
     private final TreeMap<String, ModifiedBufferedReader> secondCorrectElements = new TreeMap<>();
     private boolean finishSort = false;
+    private boolean skipErrorValue = false;
 
     public StringSortMethod(List<ModifiedBufferedReader> modifiedBufferedReaderList, BufferedWriter bw) {
         this.modifiedBufferedReaderList = modifiedBufferedReaderList;
@@ -27,7 +28,7 @@ public class StringSortMethod {
 
     public void sortAsc() {
         int sizeOfMbrList = modifiedBufferedReaderList.size();
-        if(sizeOfMbrList == 0){
+        if (sizeOfMbrList == 0) {
             new ExceptionAndLogFile("All files are empty nothing to read");
             System.exit(0);
         }
@@ -42,9 +43,12 @@ public class StringSortMethod {
                 if (!finishSort) {//
                     checkCorrectSortDataAsc(secondCorrectElements.firstKey(), firstCorrectElements.firstKey(),
                             firstCorrectElements.firstEntry().getValue());
-                    firstCorrectElements.clear();
+                    if (!skipErrorValue) {
+                        firstCorrectElements.clear();
+                    }
                     secondCorrectElements.clear();
                 }
+                skipErrorValue = false;
             }
         }
         try {
@@ -97,7 +101,7 @@ public class StringSortMethod {
                         printAndWriteElement(emptyMbr.getCurrentValue());
                         finishSort = true;
                     }
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
                     finishSort = true;
                     finishedReaders++;
                     break;
@@ -118,11 +122,13 @@ public class StringSortMethod {
             if (finishedReaders != sizeOfMbrList) {
                 getCorrectElements(secondCorrectElements);
                 if (!finishSort) {//
-                checkCorrectSortDataDesc(secondCorrectElements.lastKey(), firstCorrectElements.lastKey(),
-                        firstCorrectElements.lastEntry().getValue());
-                firstCorrectElements.clear();
-                secondCorrectElements.clear();
-            }
+                    checkCorrectSortDataDesc(secondCorrectElements.lastKey(), firstCorrectElements.lastKey(),
+                            firstCorrectElements.lastEntry().getValue());
+                    if (!skipErrorValue) {
+                        firstCorrectElements.clear();
+                    }
+                    secondCorrectElements.clear();
+                }
             }
         }
         try {
@@ -140,6 +146,7 @@ public class StringSortMethod {
                     + mbrSorted.getNameOfFile() + "' in Row: '"
                     + mbrSorted.getRowsCount() + "'  value '" + ascValue
                     + "' must be older than '" + preLastAscValue + "'");
+            skipErrorValue = true;
         } else {
             printAndWriteElement(ascValue);
         }
@@ -152,6 +159,7 @@ public class StringSortMethod {
                     + mbrSorted.getNameOfFile() + "' in Row: '"
                     + mbrSorted.getRowsCount() + "'  value '" + descValue
                     + "' must be earlier than '" + preLastDescValue + "'");
+            skipErrorValue = true;
         } else {
             printAndWriteElement(descValue);
         }

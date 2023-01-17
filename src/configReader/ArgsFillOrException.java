@@ -5,11 +5,11 @@ import exeptionHandling.ExceptionAndLogFile;
 import sorters.ClassObjectType;
 import sorters.SortingMethod;
 
-public class argsFillOrException {
+public class ArgsFillOrException {
 
     private final String[] args;
 
-    public argsFillOrException(String args[]) {
+    public ArgsFillOrException(String args[]) {
         this.args = args;
     }
 

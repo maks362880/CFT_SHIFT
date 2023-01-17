@@ -1,14 +1,14 @@
 package facade;
 
 import builder.BuildAndRunSortMethod;
-import configReader.argsFillOrException;
+import configReader.ArgsFillOrException;
 
 public class MergeSortFacade {
 
     private int maxPartSizeFileKb = 8;//default value in kb in bufferedreader
     public void start(String[] args) {
         BuildAndRunSortMethod buildAndRunSortMethod = new BuildAndRunSortMethod(args,maxPartSizeFileKb);
-        argsFillOrException argsFillOrException = new argsFillOrException(args);
+        ArgsFillOrException argsFillOrException = new ArgsFillOrException(args);
         argsFillOrException.createUseArgs(buildAndRunSortMethod);
         buildAndRunSortMethod.create();
     }
