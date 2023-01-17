@@ -67,7 +67,7 @@ public class BuildAndRunSortMethod {
 
 
     private BufferedWriter getOutputStream(String outputFileName) {
-        BufferedWriter bw = null;//объект с помощью которого запишем выходной файл
+        BufferedWriter bw = null;
         try {
             bw = new BufferedWriter(new FileWriter("resource\\" + outputFileName));
         } catch (IOException e) {

@@ -25,6 +25,10 @@ public class StringSortMethod {
 
     public void sortAsc() {
         int sizeOfMbrList = modifiedBufferedReaderList.size();
+        if(sizeOfMbrList == 0){
+            new ExceptionAndLogFile("All files are empty nothing to read");
+            throw new RuntimeException("All files are empty nothing to read");
+        }
         int finishedReaders = 0;
         getCorrectElements(firstCorrectElements);
         printAndWriteElement(firstCorrectElements.firstKey());
