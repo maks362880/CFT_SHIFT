@@ -77,7 +77,7 @@ public class IntegerSortMethod {
                         mbr.readLine();
                         if (!mbr.ready()) {
                             emptyMbr = mbr;
-                            System.out.println("     Stream " + emptyMbr.getNameOfFile() + " is closed");
+                            new ExceptionAndLogFile("Stream '" + emptyMbr.getNameOfFile() + "' is done and closed");
                             finishedReaders++;
                         }
                     } catch (IOException e) {
@@ -152,7 +152,7 @@ public class IntegerSortMethod {
     private void mbrCloseOrNext(ModifiedBufferedReader mbr) {
         try {
             if (!mbr.ready()) {
-                System.out.println("     Stream " + mbr.getNameOfFile() + " is closed");
+                new ExceptionAndLogFile("Stream '" + mbr.getNameOfFile() + "' is done and closed");
                 mbr.close();
                 modifiedBufferedReaderList.remove(mbr);
                 finishedReaders++;

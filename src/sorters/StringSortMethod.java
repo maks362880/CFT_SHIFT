@@ -30,7 +30,7 @@ public class StringSortMethod {
         int sizeOfMbrList = modifiedBufferedReaderList.size();
         if(sizeOfMbrList == 0){
             new ExceptionAndLogFile("All files are empty nothing to read");
-            throw new RuntimeException("All files are empty nothing to read");
+            System.exit(0);
         }
         getCorrectElements(firstCorrectElements);
         printAndWriteElement(firstCorrectElements.firstKey());
@@ -81,7 +81,7 @@ public class StringSortMethod {
                         mbr.readLine();
                         if (!mbr.ready()) {
                             emptyMbr = mbr;
-                            System.out.println("     Stream " + emptyMbr.getNameOfFile() + " is closed");
+                            new ExceptionAndLogFile("Stream '" + emptyMbr.getNameOfFile() + "' is done and closed");
                         }
                     } catch (IOException e) {
                         throw new RuntimeException(e);
@@ -162,7 +162,7 @@ public class StringSortMethod {
     private void mbrCloseOrNext(ModifiedBufferedReader mbr) {
         try {
             if (!mbr.ready()) {
-                System.out.println("     Stream " + mbr.getNameOfFile() + " is closed");
+                new ExceptionAndLogFile("Stream '" + mbr.getNameOfFile() + "' is done and closed");
                 mbr.close();
                 modifiedBufferedReaderList.remove(mbr);
                 finishedReaders++;
