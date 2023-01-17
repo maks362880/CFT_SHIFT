@@ -12,6 +12,7 @@ public class StringSortMethod {
 
     private final List<ModifiedBufferedReader> modifiedBufferedReaderList;
     private final BufferedWriter bw;
+    private  int finishedReaders = 0;
 
     private final TreeMap<String, ModifiedBufferedReader> firstCorrectElements = new TreeMap<>();
     private final TreeMap<String, ModifiedBufferedReader> secondCorrectElements = new TreeMap<>();
@@ -29,13 +30,12 @@ public class StringSortMethod {
             new ExceptionAndLogFile("All files are empty nothing to read");
             throw new RuntimeException("All files are empty nothing to read");
         }
-        int finishedReaders = 0;
         getCorrectElements(firstCorrectElements);
         printAndWriteElement(firstCorrectElements.firstKey());
         firstCorrectElements.clear();
         while (sizeOfMbrList > finishedReaders) {
             getCorrectElements(firstCorrectElements);
-            finishedReaders = mbrCloseOrNext(firstCorrectElements.firstEntry().getValue(), finishedReaders);
+            mbrCloseOrNext(firstCorrectElements.firstEntry().getValue());
             if (finishedReaders != sizeOfMbrList) {
                 getCorrectElements(secondCorrectElements);
                 checkCorrectSortDataAsc(secondCorrectElements.firstKey(), firstCorrectElements.firstKey(),
@@ -92,13 +92,12 @@ public class StringSortMethod {
 
     public void sortDesc() {
         int sizeOfMbrList = modifiedBufferedReaderList.size();
-        int finishedReaders = 0;
         getCorrectElements(firstCorrectElements);
         printAndWriteElement(firstCorrectElements.lastKey());
         firstCorrectElements.clear();
         while (sizeOfMbrList > finishedReaders) {
             getCorrectElements(firstCorrectElements);
-            finishedReaders = mbrCloseOrNext(firstCorrectElements.lastEntry().getValue(), finishedReaders);
+            mbrCloseOrNext(firstCorrectElements.lastEntry().getValue());
             if (finishedReaders != sizeOfMbrList) {
                 getCorrectElements(secondCorrectElements);
                 checkCorrectSortDataDesc(secondCorrectElements.lastKey(), firstCorrectElements.lastKey(),
@@ -140,13 +139,13 @@ public class StringSortMethod {
     }
 
 
-    private int mbrCloseOrNext(ModifiedBufferedReader mbr, int finishedModBufferedReader) {
+    private void mbrCloseOrNext(ModifiedBufferedReader mbr) {
         try {
             if (!mbr.ready()) {
                 System.out.println("     Stream " + mbr.getNameOfFile() + " is closed");
                 mbr.close();
                 modifiedBufferedReaderList.remove(mbr);
-                finishedModBufferedReader++;
+                finishedReaders++;
             } else {
                 mbr.readLine();
             }
@@ -154,7 +153,7 @@ public class StringSortMethod {
             new ExceptionAndLogFile("Something wrong in file '" + mbr.getNameOfFile() +
                     "' error message: " + e.getMessage());
         }
-        return finishedModBufferedReader;
+
     }
 
 
