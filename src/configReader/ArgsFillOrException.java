@@ -21,7 +21,7 @@ public class ArgsFillOrException {
             case ("-d") -> buildAndRunSortMethod.setSortingMethod(SortingMethod.Desc);
             default -> {
                 new ExceptionAndLogFile("Wrong param '" + args[0] + "' with id " + 0);
-                throw new RuntimeException();
+                System.exit(0);
             }
         }
 

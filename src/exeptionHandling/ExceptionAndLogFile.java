@@ -7,6 +7,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class ExceptionAndLogFile {
+   private String message;
     public ExceptionAndLogFile(String message) {
         message = "     "+LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss ")) + message;
         System.out.println(message);

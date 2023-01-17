@@ -115,4 +115,8 @@ public class BuildAndRunSortMethod {
     public int getMaxPartSizeFileKb() {
         return maxPartSizeFileKb;
     }
+
+    public int getOffset() {
+        return offset;
+    }
 }
