@@ -6,6 +6,7 @@ import readAndWrite.ModifiedBufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.TreeMap;
 
 public class IntegerSortMethod {
@@ -13,6 +14,7 @@ public class IntegerSortMethod {
     private final List<ModifiedBufferedReader> modifiedBufferedReaderList;
     private final BufferedWriter bw;
     private int finishedReaders = 0;
+    private boolean finishSort = false;
 
     private final TreeMap<Integer, ModifiedBufferedReader> firstCorrectElements = new TreeMap<>();
     private final TreeMap<Integer, ModifiedBufferedReader> secondCorrectElements = new TreeMap<>();
@@ -25,7 +27,7 @@ public class IntegerSortMethod {
 
     public void sortAsc() {
         int sizeOfMbrList = modifiedBufferedReaderList.size();
-        if(sizeOfMbrList == 0){
+        if (sizeOfMbrList == 0) {
             new ExceptionAndLogFile("All files are empty nothing to read");
             throw new RuntimeException("All files are empty nothing to read");
         }
@@ -37,10 +39,12 @@ public class IntegerSortMethod {
             mbrCloseOrNext(firstCorrectElements.firstEntry().getValue());
             if (finishedReaders != sizeOfMbrList) {
                 getCorrectElements(secondCorrectElements);
-                checkCorrectSortDataAsc(secondCorrectElements.firstKey(), firstCorrectElements.firstKey(),
-                        firstCorrectElements.firstEntry().getValue());
-                firstCorrectElements.clear();
-                secondCorrectElements.clear();
+                if (!finishSort) {//
+                    checkCorrectSortDataAsc(secondCorrectElements.firstKey(), firstCorrectElements.firstKey(),
+                            firstCorrectElements.firstEntry().getValue());
+                    firstCorrectElements.clear();
+                    secondCorrectElements.clear();
+                }//
             }
         }
         try {
@@ -74,6 +78,7 @@ public class IntegerSortMethod {
                         if (!mbr.ready()) {
                             emptyMbr = mbr;
                             System.out.println("     Stream " + emptyMbr.getNameOfFile() + " is closed");
+                            finishedReaders++;
                         }
                     } catch (IOException e) {
                         throw new RuntimeException(e);
@@ -82,6 +87,13 @@ public class IntegerSortMethod {
             }
             if (emptyMbr != null) {
                 modifiedBufferedReaderList.remove(emptyMbr);
+            }
+            if (modifiedBufferedReaderList.size() == 0) {
+                finishSort = true;
+                if (Objects.requireNonNull(emptyMbr).getCurrentIntValue() != null) {
+                    printAndWriteElement(emptyMbr.getCurrentIntValue());
+                }
+                break;
             }
         }
     }
@@ -96,10 +108,12 @@ public class IntegerSortMethod {
             mbrCloseOrNext(firstCorrectElements.lastEntry().getValue());
             if (finishedReaders != sizeOfMbrList) {
                 getCorrectElements(secondCorrectElements);
-                checkCorrectSortDataDesc(secondCorrectElements.lastKey(), firstCorrectElements.lastKey(),
-                        firstCorrectElements.lastEntry().getValue());
-                firstCorrectElements.clear();
-                secondCorrectElements.clear();
+                if (!finishSort) {
+                    checkCorrectSortDataDesc(secondCorrectElements.lastKey(), firstCorrectElements.lastKey(),
+                            firstCorrectElements.lastEntry().getValue());
+                    firstCorrectElements.clear();
+                    secondCorrectElements.clear();
+                }
             }
         }
         try {
