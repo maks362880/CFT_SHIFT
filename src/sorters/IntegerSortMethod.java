@@ -5,57 +5,43 @@ import readAndWrite.ModifiedBufferedReader;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
+import java.util.TreeMap;
 
 public class IntegerSortMethod {
+
     private final List<ModifiedBufferedReader> modifiedBufferedReaderList;
     private final BufferedWriter bw;
+
+    private final TreeMap<Integer, ModifiedBufferedReader> firstCorrectElements = new TreeMap<>();
+    private final TreeMap<Integer, ModifiedBufferedReader> secondCorrectElements = new TreeMap<>();
 
     public IntegerSortMethod(List<ModifiedBufferedReader> modifiedBufferedReaderList, BufferedWriter bw) {
         this.modifiedBufferedReaderList = modifiedBufferedReaderList;
         this.bw = bw;
-    }
 
+    }
 
     public void sortAsc() {
-        int minValue = Integer.MAX_VALUE;
-        int preLastMinValue = Integer.MIN_VALUE;
-        ModifiedBufferedReader mBufferedReaderWithMinValue = null;//буферридер с текущим минимальным/максимальным значением внутри
-        ModifiedBufferedReader mbrReadyToDelete = null;//буфферидер с пометкой на удаление
-        int size = modifiedBufferedReaderList.size();// количество буферидеов
-        int finishedModBufferedReader = 0;//количество буферридеров из которых взяли все данные
-
-        while (size > finishedModBufferedReader) {//пока есть незавершенные буферридеры
-            for (ModifiedBufferedReader mbr : modifiedBufferedReaderList) {
-                while (mbr.getCurrentIntValue() == null && !mbr.isClose()) {
-                    try {
-                        if (mbr.ready()) {
-                            mbr.readLine();
-                        } else {
-                            System.out.println("     Stream " + mbr.getNameOfFile() + " is closed");
-                            mbr.close();//закрываем его
-                            mbrReadyToDelete = mbr;//ставим метку т.к. в итерраторе удалять запрещено
-                            finishedModBufferedReader++;//один поток буфера завершен
-                            break;
-                        }
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-                if (mbr.getCurrentIntValue() != null) {
-                    int val = mbr.getCurrentIntValue();
-                    if (val < minValue) {
-                        minValue = val;
-                        mBufferedReaderWithMinValue = mbr;
-                    }
-                }
+        int sizeOfMbrList = modifiedBufferedReaderList.size();
+        if(sizeOfMbrList == 0){
+            new ExceptionAndLogFile("All files are empty nothing to read");
+            throw new RuntimeException("All files are empty nothing to read");
+        }
+        int finishedReaders = 0;
+        getCorrectElements(firstCorrectElements);
+        printAndWriteElement(firstCorrectElements.firstKey());
+        firstCorrectElements.clear();
+        while (sizeOfMbrList > finishedReaders) {
+            getCorrectElements(firstCorrectElements);
+            finishedReaders = mbrCloseOrNext(firstCorrectElements.firstEntry().getValue(), finishedReaders);
+            if (finishedReaders != sizeOfMbrList) {
+                getCorrectElements(secondCorrectElements);
+                checkCorrectSortDataAsc(secondCorrectElements.firstKey(), firstCorrectElements.firstKey(),
+                        firstCorrectElements.firstEntry().getValue());
+                firstCorrectElements.clear();
+                secondCorrectElements.clear();
             }
-            deleteFinishMbrAfterIterator(mbrReadyToDelete);
-            mbrReadyToDelete = null;
-            finishedModBufferedReader = mbrCloseOrNext(mBufferedReaderWithMinValue, finishedModBufferedReader);
-            checkCorrectSortDataAsc(minValue, preLastMinValue, mBufferedReaderWithMinValue);
-            preLastMinValue = minValue;
-            minValue = Integer.MAX_VALUE;
         }
         try {
             bw.flush();
@@ -65,48 +51,57 @@ public class IntegerSortMethod {
         }
     }
 
+    private void printAndWriteElement(Integer firstCorrectElements) {
+        try {
+            System.out.println(firstCorrectElements);
+            bw.write(String.valueOf(firstCorrectElements));
+            bw.newLine();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    private void getCorrectElements(TreeMap<Integer, ModifiedBufferedReader> result) {
+        ModifiedBufferedReader emptyMbr = null;
+        while (result.isEmpty()) {
+            for (ModifiedBufferedReader mbr : modifiedBufferedReaderList) {
+                if (mbr.getCurrentIntValue() != null) {
+                    result.put(mbr.getCurrentIntValue(), mbr);
+                } else {
+                    try {
+                        mbr.readLine();
+                        if (!mbr.ready()) {
+                            emptyMbr = mbr;
+                            System.out.println("     Stream " + emptyMbr.getNameOfFile() + " is closed");
+                        }
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+            if (emptyMbr != null) {
+                modifiedBufferedReaderList.remove(emptyMbr);
+            }
+        }
+    }
 
     public void sortDesc() {
-        int maxValue = Integer.MIN_VALUE;
-        int preLastMaxValue = Integer.MAX_VALUE;
-        ModifiedBufferedReader mBufferedReaderWithMaxValue = null;//буферридер с текущим минимальным/максимальным значением внутри
-        ModifiedBufferedReader mbrReadyToDelete = null;//буфферидер с пометкой на удаление
-        int size = modifiedBufferedReaderList.size();// количество буферидеов
-        int finishedModBufferedReader = 0;//количество буферридеров из которых взяли все данные
-
-        while (size > finishedModBufferedReader) {//пока есть незавершенные буферридеры
-            for (ModifiedBufferedReader mbr : modifiedBufferedReaderList) {
-                while (mbr.getCurrentIntValue() == null && !mbr.isClose()) {
-                    try {
-                        if (mbr.ready()) {
-                            mbr.readLine();
-                        } else {
-                            System.out.println("     Stream " + mbr.getNameOfFile() + " is closed");
-                            mbr.close();//закрываем его
-                            mbrReadyToDelete = mbr;//ставим метку т.к. в итерраторе удалять запрещено
-                            finishedModBufferedReader++;//один поток буфера завершен
-                            break;
-                        }
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-                if (mbr.getCurrentIntValue() != null) {
-                    int val = mbr.getCurrentIntValue();
-                    if (val > maxValue) {
-                        maxValue = val;
-                        mBufferedReaderWithMaxValue = mbr;
-                    }
-                }
+        int sizeOfMbrList = modifiedBufferedReaderList.size();
+        int finishedReaders = 0;
+        getCorrectElements(firstCorrectElements);
+        printAndWriteElement(firstCorrectElements.lastKey());
+        firstCorrectElements.clear();
+        while (sizeOfMbrList > finishedReaders) {
+            getCorrectElements(firstCorrectElements);
+            finishedReaders = mbrCloseOrNext(firstCorrectElements.lastEntry().getValue(), finishedReaders);
+            if (finishedReaders != sizeOfMbrList) {
+                getCorrectElements(secondCorrectElements);
+                checkCorrectSortDataDesc(secondCorrectElements.lastKey(), firstCorrectElements.lastKey(),
+                        firstCorrectElements.lastEntry().getValue());
+                firstCorrectElements.clear();
+                secondCorrectElements.clear();
             }
-            deleteFinishMbrAfterIterator(mbrReadyToDelete);
-            mbrReadyToDelete = null;
-            finishedModBufferedReader = mbrCloseOrNext(mBufferedReaderWithMaxValue, finishedModBufferedReader);
-
-            checkCorrectSortDataDesc(maxValue, preLastMaxValue, mBufferedReaderWithMaxValue);
-
-            preLastMaxValue = maxValue;
-            maxValue = Integer.MIN_VALUE;
         }
         try {
             bw.flush();
@@ -117,19 +112,37 @@ public class IntegerSortMethod {
     }
 
 
-    private void deleteFinishMbrAfterIterator(ModifiedBufferedReader mbrReadyToDelete) {
-        if (mbrReadyToDelete != null) {
-            modifiedBufferedReaderList.remove(mbrReadyToDelete);
+    private void checkCorrectSortDataAsc(Integer ascValue, Integer preLastAscValue, ModifiedBufferedReader mbrSorted) {
+        if (ascValue < preLastAscValue) {
+            new ExceptionAndLogFile("Error value '" + ascValue + "' in file: '"
+                    + mbrSorted.getNameOfFile() + "' in Row: '"
+                    + mbrSorted.getRowsCount() + "'  value '" + ascValue
+                    + "' must be bigger than '" + preLastAscValue + "'");
+        } else {
+            printAndWriteElement(ascValue);
         }
     }
+
+
+    private void checkCorrectSortDataDesc(Integer descValue, Integer preLastDescValue, ModifiedBufferedReader mbrSorted) {
+        if (descValue > preLastDescValue) {
+            new ExceptionAndLogFile("Error value '" + descValue + "' in file: '"
+                    + mbrSorted.getNameOfFile() + "' in Row: '"
+                    + mbrSorted.getRowsCount() + "'  value '" + descValue
+                    + "' must be smaller than '" + preLastDescValue + "'");
+        } else {
+            printAndWriteElement(descValue);
+        }
+    }
+
 
     private int mbrCloseOrNext(ModifiedBufferedReader mbr, int finishedModBufferedReader) {
         try {
-            if (!mbr.ready()) {//если буферридер не готов
+            if (!mbr.ready()) {
                 System.out.println("     Stream " + mbr.getNameOfFile() + " is closed");
-                mbr.close();//закрываем его
-                modifiedBufferedReaderList.remove(mbr);//чистим лист
-                finishedModBufferedReader++;//один поток буфера завершен
+                mbr.close();
+                modifiedBufferedReaderList.remove(mbr);
+                finishedModBufferedReader++;
             } else {
                 mbr.readLine();
             }
@@ -138,42 +151,6 @@ public class IntegerSortMethod {
                     "' error message: " + e.getMessage());
         }
         return finishedModBufferedReader;
-    }
-
-    private void checkCorrectSortDataDesc(int maxValue, int preLastMaxValue, ModifiedBufferedReader mBufferedReaderWithMaxValue) {
-        if (maxValue > preLastMaxValue) {
-            new ExceptionAndLogFile("Error value '" + maxValue + "' in file: '"
-                    + mBufferedReaderWithMaxValue.getNameOfFile() + "' in Row: '"
-                    + mBufferedReaderWithMaxValue.getRowsCount() + "'  value '" + maxValue
-                    + "' must be less than '" + preLastMaxValue + "'");
-        } else {
-            try {
-                System.out.println(maxValue);//test
-                bw.write(String.valueOf(maxValue));
-                bw.newLine();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-
-
-    private void checkCorrectSortDataAsc(int minValue, int preLastMinValue, ModifiedBufferedReader mBufferedReaderWithMinValue) {
-        if (minValue < preLastMinValue) {
-            new ExceptionAndLogFile("Error value '" + minValue + "' in file: '"
-                    + mBufferedReaderWithMinValue.getNameOfFile() + "' in Row: '"
-                    + mBufferedReaderWithMinValue.getRowsCount() + "'  value '" + minValue
-                    + "' must be grater than '" + preLastMinValue + "'");
-        } else {
-            try {
-                System.out.println(minValue);//test
-                bw.write(String.valueOf(minValue));
-                bw.newLine();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
     }
 
 }
