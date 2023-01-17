@@ -96,8 +96,11 @@ public class StringSortMethod {
                 try {
                     if (emptyMbr.getCurrentValue() != null) {
                         printAndWriteElement(emptyMbr.getCurrentValue());
+                        finishSort = true;
                     }
                 }catch (NullPointerException e){
+                    finishSort = true;
+                    finishedReaders++;
                     break;
                 }
                 break;
