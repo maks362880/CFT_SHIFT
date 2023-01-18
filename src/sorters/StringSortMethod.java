@@ -12,12 +12,11 @@ public class StringSortMethod {
 
     private final List<ModifiedBufferedReader> modifiedBufferedReaderList;
     private final BufferedWriter bw;
-    private int finishedReaders = 0;
-
     private final TreeMap<String, ModifiedBufferedReader> firstCorrectElements = new TreeMap<>();
     private final TreeMap<String, ModifiedBufferedReader> secondCorrectElements = new TreeMap<>();
     private boolean finishSort = false;
     private boolean skipErrorValue = false;
+    private int finishedReaders = 0;
 
     public StringSortMethod(List<ModifiedBufferedReader> modifiedBufferedReaderList, BufferedWriter bw) {
         this.modifiedBufferedReaderList = modifiedBufferedReaderList;
@@ -59,11 +58,30 @@ public class StringSortMethod {
         }
     }
 
-    private void printAndWriteElement(String firstCorrectElements) {
+
+    public void sortDesc() {
+        int sizeOfMbrList = modifiedBufferedReaderList.size();
+        getCorrectElements(firstCorrectElements);
+        printAndWriteElement(firstCorrectElements.lastKey());
+        firstCorrectElements.clear();
+        while (sizeOfMbrList > finishedReaders) {
+            getCorrectElements(firstCorrectElements);
+            mbrCloseOrNext(firstCorrectElements.lastEntry().getValue());
+            if (finishedReaders != sizeOfMbrList) {
+                getCorrectElements(secondCorrectElements);
+                if (!finishSort) {//
+                    checkCorrectSortDataDesc(secondCorrectElements.lastKey(), firstCorrectElements.lastKey(),
+                            firstCorrectElements.lastEntry().getValue());
+                    if (!skipErrorValue) {
+                        firstCorrectElements.clear();
+                    }
+                    secondCorrectElements.clear();
+                }
+            }
+        }
         try {
-            System.out.println(firstCorrectElements);
-            bw.write(firstCorrectElements);
-            bw.newLine();
+            bw.flush();
+            bw.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -111,32 +129,33 @@ public class StringSortMethod {
         }
     }
 
-    public void sortDesc() {
-        int sizeOfMbrList = modifiedBufferedReaderList.size();
-        getCorrectElements(firstCorrectElements);
-        printAndWriteElement(firstCorrectElements.lastKey());
-        firstCorrectElements.clear();
-        while (sizeOfMbrList > finishedReaders) {
-            getCorrectElements(firstCorrectElements);
-            mbrCloseOrNext(firstCorrectElements.lastEntry().getValue());
-            if (finishedReaders != sizeOfMbrList) {
-                getCorrectElements(secondCorrectElements);
-                if (!finishSort) {//
-                    checkCorrectSortDataDesc(secondCorrectElements.lastKey(), firstCorrectElements.lastKey(),
-                            firstCorrectElements.lastEntry().getValue());
-                    if (!skipErrorValue) {
-                        firstCorrectElements.clear();
-                    }
-                    secondCorrectElements.clear();
-                }
-            }
-        }
+
+    private void printAndWriteElement(String firstCorrectElements) {
         try {
-            bw.flush();
-            bw.close();
+            System.out.println(firstCorrectElements);
+            bw.write(firstCorrectElements);
+            bw.newLine();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+
+    private void mbrCloseOrNext(ModifiedBufferedReader mbr) {
+        try {
+            if (!mbr.ready()) {
+                new ExceptionAndLogFile("Stream '" + mbr.getNameOfFile() + "' is done and closed");
+                mbr.close();
+                modifiedBufferedReaderList.remove(mbr);
+                finishedReaders++;
+            } else {
+                mbr.readLine();
+            }
+        } catch (IOException e) {
+            new ExceptionAndLogFile("Something wrong in file '" + mbr.getNameOfFile() +
+                    "' error message: " + e.getMessage());
+        }
+
     }
 
 
@@ -163,24 +182,6 @@ public class StringSortMethod {
         } else {
             printAndWriteElement(descValue);
         }
-    }
-
-
-    private void mbrCloseOrNext(ModifiedBufferedReader mbr) {
-        try {
-            if (!mbr.ready()) {
-                new ExceptionAndLogFile("Stream '" + mbr.getNameOfFile() + "' is done and closed");
-                mbr.close();
-                modifiedBufferedReaderList.remove(mbr);
-                finishedReaders++;
-            } else {
-                mbr.readLine();
-            }
-        } catch (IOException e) {
-            new ExceptionAndLogFile("Something wrong in file '" + mbr.getNameOfFile() +
-                    "' error message: " + e.getMessage());
-        }
-
     }
 
 

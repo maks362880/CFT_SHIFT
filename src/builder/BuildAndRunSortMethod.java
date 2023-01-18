@@ -12,8 +12,47 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BuildAndRunSortMethod {
+    private final String[] args;
+    private final int maxPartSizeFileKb;
+    private int offset;
+    private ClassObjectType classObjectType = ClassObjectType.Exception;
 
-    private SortingMethod sortingMethod = SortingMethod.Asc;//default ASC - возрастание
+    private SortingMethod sortingMethod = SortingMethod.Asc;
+
+    public BuildAndRunSortMethod(String[] args, int maxPartSizeFileKb) {
+        this.args = args;
+        this.maxPartSizeFileKb = maxPartSizeFileKb;
+    }
+
+    public String[] getArgs() {
+        return args;
+    }
+
+    public int getMaxPartSizeFileKb() {
+        return maxPartSizeFileKb;
+    }
+
+    public int getOffset() {
+        return offset;
+    }
+    public void setClassObjectType(ClassObjectType classObjectType) {
+        this.classObjectType = classObjectType;
+    }
+
+    public void setSortingMethod(SortingMethod sortingMethod) {
+        this.sortingMethod = sortingMethod;
+    }
+
+    public void setOffset(int offset) {
+        this.offset = offset;
+    }
+    public ClassObjectType getClassObjectType() {
+        return classObjectType;
+    }
+
+    public SortingMethod getSortingMethod() {
+        return sortingMethod;
+    }
 
     public void create() {
         List<ModifiedBufferedReader> modifiedBufferedReaderList = getModifiedBufferedReaders(args, offset);
@@ -69,7 +108,8 @@ public class BuildAndRunSortMethod {
     private BufferedWriter getOutputStream(String outputFileName) {
         BufferedWriter bw = null;
         try {
-            bw = new BufferedWriter(new FileWriter("resource\\" + outputFileName));
+           // bw = new BufferedWriter(new FileWriter("resource\\" + outputFileName));
+            bw = new BufferedWriter(new FileWriter(outputFileName));
         } catch (IOException e) {
             new ExceptionAndLogFile("Output Stream '" + outputFileName + "' threw an exception");
             throw new RuntimeException(e);
@@ -78,45 +118,4 @@ public class BuildAndRunSortMethod {
     }
 
 
-    public void setClassObjectType(ClassObjectType classObjectType) {
-        this.classObjectType = classObjectType;
-    }
-
-    public void setSortingMethod(SortingMethod sortingMethod) {
-        this.sortingMethod = sortingMethod;
-    }
-
-    public void setOffset(int offset) {
-        this.offset = offset;
-    }
-
-    public BuildAndRunSortMethod(String[] args, int maxPartSizeFileKb) {
-        this.args = args;
-        this.maxPartSizeFileKb = maxPartSizeFileKb;
-    }
-
-    private final String[] args;
-    private final int maxPartSizeFileKb;
-    private int offset;
-    private ClassObjectType classObjectType = ClassObjectType.Exception;
-
-    public ClassObjectType getClassObjectType() {
-        return classObjectType;
-    }
-
-    public SortingMethod getSortingMethod() {
-        return sortingMethod;
-    }
-
-    public String[] getArgs() {
-        return args;
-    }
-
-    public int getMaxPartSizeFileKb() {
-        return maxPartSizeFileKb;
-    }
-
-    public int getOffset() {
-        return offset;
-    }
 }

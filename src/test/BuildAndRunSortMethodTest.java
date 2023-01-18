@@ -2,15 +2,11 @@ package test;
 
 import builder.BuildAndRunSortMethod;
 import configReader.ArgsFillOrException;
-import exeptionHandling.ExceptionAndLogFile;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sorters.ClassObjectType;
 import sorters.SortingMethod;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class BuildAndRunSortMethodTest {
 
@@ -53,17 +49,6 @@ class BuildAndRunSortMethodTest {
         assertEquals(brsr.getOffset(),1);
     }
 
-    @Test
-    void setOffsetErr() {
-        String[] args = {"1.txt","2.txt","3.txt","4.txt"};
-        int  MaxPartSizeFileKb = 28762;
-        BuildAndRunSortMethod brsr = new BuildAndRunSortMethod(args,MaxPartSizeFileKb);
-        ArgsFillOrException aof = new ArgsFillOrException(args);
-        aof.createUseArgs(brsr);
-      //  ExceptionAndLogFile andLogFile = new ExceptionAndLogFile("Wrong param '1.txt' with id 0");
-       // assertTrue(andLogFile.getMessage().contains("Wrong param '1.txt' with id 0"));
-        assertTrue(true);
-    }
 
     @Test
     void getClassObjectType() {

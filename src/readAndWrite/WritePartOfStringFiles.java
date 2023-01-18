@@ -11,7 +11,8 @@ public class WritePartOfStringFiles {
 
     public void write(String outputFileName, List<String> bufferList) {
         try (BufferedWriter bw = new BufferedWriter(
-                new FileWriter("resource\\" + outputFileName, true))) {//true - дописывание в конец файла
+              //  new FileWriter("resource\\" + outputFileName, true))) {
+                new FileWriter(outputFileName, true))) {
             for (String val : bufferList) {
                 bw.write(val);
                 bw.newLine();
@@ -22,6 +23,4 @@ public class WritePartOfStringFiles {
                     "' error message: " + e.getMessage());
         }
     }
-
-
 }

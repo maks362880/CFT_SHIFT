@@ -11,10 +11,12 @@ public class BufferedReadFiles {
 
     public void read(List<ModifiedBufferedReader> mBufferList, String inputFileName, int maxPartSizeFileKb) {
         try {
-            File file = new File("resource\\" + inputFileName);
+          //  File file = new File("resource\\" + inputFileName);
+            File file = new File(inputFileName);
             if (file.length() != 0L) {
                 ModifiedBufferedReader mbr = new ModifiedBufferedReader(
-                        new FileReader("resource\\" + inputFileName), maxPartSizeFileKb * 1024);
+                    //    new FileReader("resource\\" + inputFileName), maxPartSizeFileKb * 1024);
+                new FileReader( inputFileName), maxPartSizeFileKb * 1024);
                 mbr.setNameOfFile(inputFileName);
                 mBufferList.add(mbr);
             }

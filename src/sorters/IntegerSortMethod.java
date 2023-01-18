@@ -13,16 +13,15 @@ public class IntegerSortMethod {
 
     private final List<ModifiedBufferedReader> modifiedBufferedReaderList;
     private final BufferedWriter bw;
-    private int finishedReaders = 0;
-    private boolean finishSort = false;
-
     private final TreeMap<Integer, ModifiedBufferedReader> firstCorrectElements = new TreeMap<>();
     private final TreeMap<Integer, ModifiedBufferedReader> secondCorrectElements = new TreeMap<>();
+
+    private int finishedReaders = 0;
+    private boolean finishSort = false;
 
     public IntegerSortMethod(List<ModifiedBufferedReader> modifiedBufferedReaderList, BufferedWriter bw) {
         this.modifiedBufferedReaderList = modifiedBufferedReaderList;
         this.bw = bw;
-
     }
 
     public void sortAsc() {
@@ -39,12 +38,12 @@ public class IntegerSortMethod {
             mbrCloseOrNext(firstCorrectElements.firstEntry().getValue());
             if (finishedReaders != sizeOfMbrList) {
                 getCorrectElements(secondCorrectElements);
-                if (!finishSort) {//
+                if (!finishSort) {
                     checkCorrectSortDataAsc(secondCorrectElements.firstKey(), firstCorrectElements.firstKey(),
                             firstCorrectElements.firstEntry().getValue());
                     firstCorrectElements.clear();
                     secondCorrectElements.clear();
-                }//
+                }
             }
         }
         try {
@@ -55,11 +54,27 @@ public class IntegerSortMethod {
         }
     }
 
-    private void printAndWriteElement(Integer firstCorrectElements) {
+    public void sortDesc() {
+        int sizeOfMbrList = modifiedBufferedReaderList.size();
+        getCorrectElements(firstCorrectElements);
+        printAndWriteElement(firstCorrectElements.lastKey());
+        firstCorrectElements.clear();
+        while (sizeOfMbrList > finishedReaders) {
+            getCorrectElements(firstCorrectElements);
+            mbrCloseOrNext(firstCorrectElements.lastEntry().getValue());
+            if (finishedReaders != sizeOfMbrList) {
+                getCorrectElements(secondCorrectElements);
+                if (!finishSort) {
+                    checkCorrectSortDataDesc(secondCorrectElements.lastKey(), firstCorrectElements.lastKey(),
+                            firstCorrectElements.lastEntry().getValue());
+                    firstCorrectElements.clear();
+                    secondCorrectElements.clear();
+                }
+            }
+        }
         try {
-            System.out.println(firstCorrectElements);
-            bw.write(String.valueOf(firstCorrectElements));
-            bw.newLine();
+            bw.flush();
+            bw.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -98,29 +113,31 @@ public class IntegerSortMethod {
         }
     }
 
-    public void sortDesc() {
-        int sizeOfMbrList = modifiedBufferedReaderList.size();
-        getCorrectElements(firstCorrectElements);
-        printAndWriteElement(firstCorrectElements.lastKey());
-        firstCorrectElements.clear();
-        while (sizeOfMbrList > finishedReaders) {
-            getCorrectElements(firstCorrectElements);
-            mbrCloseOrNext(firstCorrectElements.lastEntry().getValue());
-            if (finishedReaders != sizeOfMbrList) {
-                getCorrectElements(secondCorrectElements);
-                if (!finishSort) {
-                    checkCorrectSortDataDesc(secondCorrectElements.lastKey(), firstCorrectElements.lastKey(),
-                            firstCorrectElements.lastEntry().getValue());
-                    firstCorrectElements.clear();
-                    secondCorrectElements.clear();
-                }
-            }
-        }
+
+    private void printAndWriteElement(Integer firstCorrectElements) {
         try {
-            bw.flush();
-            bw.close();
+            System.out.println(firstCorrectElements);
+            bw.write(String.valueOf(firstCorrectElements));
+            bw.newLine();
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+
+    private void mbrCloseOrNext(ModifiedBufferedReader mbr) {
+        try {
+            if (!mbr.ready()) {
+                new ExceptionAndLogFile("Stream '" + mbr.getNameOfFile() + "' is done and closed");
+                mbr.close();
+                modifiedBufferedReaderList.remove(mbr);
+                finishedReaders++;
+            } else {
+                mbr.readLine();
+            }
+        } catch (IOException e) {
+            new ExceptionAndLogFile("Something wrong in file '" + mbr.getNameOfFile() +
+                    "' error message: " + e.getMessage());
         }
     }
 
@@ -148,21 +165,5 @@ public class IntegerSortMethod {
         }
     }
 
-
-    private void mbrCloseOrNext(ModifiedBufferedReader mbr) {
-        try {
-            if (!mbr.ready()) {
-                new ExceptionAndLogFile("Stream '" + mbr.getNameOfFile() + "' is done and closed");
-                mbr.close();
-                modifiedBufferedReaderList.remove(mbr);
-                finishedReaders++;
-            } else {
-                mbr.readLine();
-            }
-        } catch (IOException e) {
-            new ExceptionAndLogFile("Something wrong in file '" + mbr.getNameOfFile() +
-                    "' error message: " + e.getMessage());
-        }
-    }
 
 }

@@ -7,13 +7,13 @@ import java.io.IOException;
 import java.io.Reader;
 
 public class ModifiedBufferedReader extends BufferedReader {
-    public boolean isClose = false;
+
     private int rowsCount = 0;
     private Integer currentIntValue;
     private String currentStringValue;
-
     private String nameOfFile;
     private String errorStringValue;
+    public boolean isClose = false;
 
     public ModifiedBufferedReader(Reader in, int sz) {
         super(in, sz);
@@ -25,61 +25,62 @@ public class ModifiedBufferedReader extends BufferedReader {
         return currentStringValue = super.readLine();
     }
 
-    public ModifiedBufferedReader(Reader in) {
-        super(in);
+    @Override
+    public void close() throws IOException {
+        isClose = true;
+        super.close();
     }
 
-    public int getRowsCount() {
-        return rowsCount;
-    }
-
-    public void setRowsCount(int rowsCount) {
-        this.rowsCount = rowsCount;
-    }
-
-    public String getCurrentValue() {
-        return currentStringValue;
-    }
     public String getCurrentStringValueOrNullIfSpaceChar() {
-        if(currentStringValue.contains(" ")){
+        if (currentStringValue.contains(" ")) {
             errorStringValue = currentStringValue;
             return null;
         }
         return currentStringValue;
     }
 
-    public void setCurrentStringValue(String currentStringValue) {
-        this.currentStringValue = currentStringValue;
+    public Integer getCurrentIntValue() {
+        try {
+            this.currentIntValue = Integer.parseInt(currentStringValue);
+        } catch (NumberFormatException e) {
+            new ExceptionAndLogFile("Something wrong in file '" + this.nameOfFile +
+                    "' error message: " + e.getMessage() + " in row: " + this.rowsCount);
+            currentIntValue = null;
+        }
+        return currentIntValue;
     }
 
-    public String getNameOfFile() {
-        return nameOfFile;
+    public ModifiedBufferedReader(Reader in) {
+        super(in);
+    }
+
+
+    public void setRowsCount(int rowsCount) {
+        this.rowsCount = rowsCount;
+    }
+
+    public void setCurrentStringValue(String currentStringValue) {
+        this.currentStringValue = currentStringValue;
     }
 
     public void setNameOfFile(String nameOfFile) {
         this.nameOfFile = nameOfFile;
     }
 
-    public Integer getCurrentIntValue() {
-        try {
-            this.currentIntValue = Integer.parseInt(currentStringValue);
-        }catch (NumberFormatException e) {
-            new ExceptionAndLogFile("Something wrong in file '" + this.nameOfFile +//это ошибка если значение НЕ int. Запишется в лог файл (запросили путь к файлу через мапу)
-                    "' error message: " + e.getMessage() + " in row: " + this.rowsCount);
-            currentIntValue = null;
-        }
-
-        return currentIntValue;
-    }
-
     public boolean isClose() {
         return isClose;
     }
 
-    @Override
-    public void close() throws IOException {
-        isClose = true;
-        super.close();
+    public int getRowsCount() {
+        return rowsCount;
+    }
+
+    public String getNameOfFile() {
+        return nameOfFile;
+    }
+
+    public String getCurrentValue() {
+        return currentStringValue;
     }
 
     public String getErrorStringValue() {
