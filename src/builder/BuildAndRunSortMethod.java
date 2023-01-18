@@ -65,7 +65,7 @@ public class BuildAndRunSortMethod {
         }
 
         if (classObjectType == ClassObjectType.Integer) {
-            IntegerSortMethod sortMethod = new IntegerSortMethod(modifiedBufferedReaderList, bw);
+            LongSortMethod sortMethod = new LongSortMethod(modifiedBufferedReaderList, bw);
             if (sortingMethod == SortingMethod.Asc) {
                 sortMethod.sortAsc();
             } else if (sortingMethod == SortingMethod.Desc) {

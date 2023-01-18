@@ -9,17 +9,18 @@ import java.util.List;
 import java.util.Objects;
 import java.util.TreeMap;
 
-public class IntegerSortMethod {
+public class LongSortMethod {
 
     private final List<ModifiedBufferedReader> modifiedBufferedReaderList;
     private final BufferedWriter bw;
-    private final TreeMap<Integer, ModifiedBufferedReader> firstCorrectElements = new TreeMap<>();
-    private final TreeMap<Integer, ModifiedBufferedReader> secondCorrectElements = new TreeMap<>();
+    private final TreeMap<Long, ModifiedBufferedReader> firstCorrectElements = new TreeMap<>();
+    private final TreeMap<Long, ModifiedBufferedReader> secondCorrectElements = new TreeMap<>();
 
     private int finishedReaders = 0;
     private boolean finishSort = false;
+    private boolean skipErrorValue = false;
 
-    public IntegerSortMethod(List<ModifiedBufferedReader> modifiedBufferedReaderList, BufferedWriter bw) {
+    public LongSortMethod(List<ModifiedBufferedReader> modifiedBufferedReaderList, BufferedWriter bw) {
         this.modifiedBufferedReaderList = modifiedBufferedReaderList;
         this.bw = bw;
     }
@@ -36,12 +37,15 @@ public class IntegerSortMethod {
         while (sizeOfMbrList > finishedReaders) {
             getCorrectElements(firstCorrectElements);
             mbrCloseOrNext(firstCorrectElements.firstEntry().getValue());
+            getCorrectElements(firstCorrectElements);
             if (finishedReaders != sizeOfMbrList) {
                 getCorrectElements(secondCorrectElements);
                 if (!finishSort) {
                     checkCorrectSortDataAsc(secondCorrectElements.firstKey(), firstCorrectElements.firstKey(),
                             firstCorrectElements.firstEntry().getValue());
-                    firstCorrectElements.clear();
+                    if (!skipErrorValue) {
+                        firstCorrectElements.clear();
+                    }
                     secondCorrectElements.clear();
                 }
             }
@@ -54,10 +58,16 @@ public class IntegerSortMethod {
         }
     }
 
+
     public void sortDesc() {
         int sizeOfMbrList = modifiedBufferedReaderList.size();
+        if (sizeOfMbrList == 0) {
+            new ExceptionAndLogFile("All files are empty nothing to read");
+            System.exit(0);
+        }
         getCorrectElements(firstCorrectElements);
         printAndWriteElement(firstCorrectElements.lastKey());
+        mbrCloseOrNext(firstCorrectElements.lastEntry().getValue());
         firstCorrectElements.clear();
         while (sizeOfMbrList > finishedReaders) {
             getCorrectElements(firstCorrectElements);
@@ -67,7 +77,9 @@ public class IntegerSortMethod {
                 if (!finishSort) {
                     checkCorrectSortDataDesc(secondCorrectElements.lastKey(), firstCorrectElements.lastKey(),
                             firstCorrectElements.lastEntry().getValue());
-                    firstCorrectElements.clear();
+                    if (!skipErrorValue) {
+                        firstCorrectElements.clear();
+                    }
                     secondCorrectElements.clear();
                 }
             }
@@ -81,22 +93,23 @@ public class IntegerSortMethod {
     }
 
 
-    private void getCorrectElements(TreeMap<Integer, ModifiedBufferedReader> result) {
+    private void getCorrectElements(TreeMap<Long, ModifiedBufferedReader> result) {
         ModifiedBufferedReader emptyMbr = null;
         while (result.isEmpty()) {
             for (ModifiedBufferedReader mbr : modifiedBufferedReaderList) {
-                if (mbr.getCurrentIntValue() != null) {
-                    result.put(mbr.getCurrentIntValue(), mbr);
-                } else {
-                    try {
-                        mbr.readLine();
-                        if (!mbr.ready()) {
-                            emptyMbr = mbr;
-                            new ExceptionAndLogFile("Stream '" + emptyMbr.getNameOfFile() + "' is done and closed");
-                            finishedReaders++;
+                while (mbr.getCurrentLongValue() == null) {
+                    {
+                        try {
+                            mbr.readLine();
+                            if (!mbr.ready()) {
+                                emptyMbr = mbr;
+                                new ExceptionAndLogFile("Stream '" + emptyMbr.getNameOfFile() + "' is done and closed");
+                                finishedReaders++;
+                                break;
+                            }
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
                         }
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
                     }
                 }
             }
@@ -105,16 +118,20 @@ public class IntegerSortMethod {
             }
             if (modifiedBufferedReaderList.size() == 0) {
                 finishSort = true;
-                if (Objects.requireNonNull(emptyMbr).getCurrentIntValue() != null) {
-                    printAndWriteElement(emptyMbr.getCurrentIntValue());
+                if (Objects.requireNonNull(emptyMbr).getCurrentLongValue() != null) {
+                    printAndWriteElement(emptyMbr.getCurrentLongValue());
                 }
                 break;
             }
+            for (ModifiedBufferedReader mbr : modifiedBufferedReaderList) {
+                result.put(mbr.getCurrentLongValue(), mbr);
+            }
+
         }
     }
 
 
-    private void printAndWriteElement(Integer firstCorrectElements) {
+    private void printAndWriteElement(Long firstCorrectElements) {
         try {
             System.out.println(firstCorrectElements);
             bw.write(String.valueOf(firstCorrectElements));
@@ -142,24 +159,26 @@ public class IntegerSortMethod {
     }
 
 
-    private void checkCorrectSortDataAsc(Integer ascValue, Integer preLastAscValue, ModifiedBufferedReader mbrSorted) {
+    private void checkCorrectSortDataAsc(Long ascValue, Long preLastAscValue, ModifiedBufferedReader mbrSorted) {
         if (ascValue < preLastAscValue) {
             new ExceptionAndLogFile("Error value '" + ascValue + "' in file: '"
                     + mbrSorted.getNameOfFile() + "' in Row: '"
                     + mbrSorted.getRowsCount() + "'  value '" + ascValue
                     + "' must be bigger than '" + preLastAscValue + "'");
+            skipErrorValue = true;
         } else {
             printAndWriteElement(ascValue);
         }
     }
 
 
-    private void checkCorrectSortDataDesc(Integer descValue, Integer preLastDescValue, ModifiedBufferedReader mbrSorted) {
+    private void checkCorrectSortDataDesc(Long descValue, Long preLastDescValue, ModifiedBufferedReader mbrSorted) {
         if (descValue > preLastDescValue) {
             new ExceptionAndLogFile("Error value '" + descValue + "' in file: '"
                     + mbrSorted.getNameOfFile() + "' in Row: '"
                     + mbrSorted.getRowsCount() + "'  value '" + descValue
                     + "' must be smaller than '" + preLastDescValue + "'");
+            skipErrorValue = true;
         } else {
             printAndWriteElement(descValue);
         }

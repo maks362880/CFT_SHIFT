@@ -9,7 +9,7 @@ import java.io.Reader;
 public class ModifiedBufferedReader extends BufferedReader {
 
     private int rowsCount = 0;
-    private Integer currentIntValue;
+    private Long currentLongValue;
     private String currentStringValue;
     private String nameOfFile;
     private String errorStringValue;
@@ -39,15 +39,15 @@ public class ModifiedBufferedReader extends BufferedReader {
         return currentStringValue;
     }
 
-    public Integer getCurrentIntValue() {
+    public Long getCurrentLongValue() {
         try {
-            this.currentIntValue = Integer.parseInt(currentStringValue);
+            this.currentLongValue = Long.parseLong(currentStringValue);
         } catch (NumberFormatException e) {
             new ExceptionAndLogFile("Something wrong in file '" + this.nameOfFile +
                     "' error message: " + e.getMessage() + " in row: " + this.rowsCount);
-            currentIntValue = null;
+            currentLongValue = null;
         }
-        return currentIntValue;
+        return currentLongValue;
     }
 
     public ModifiedBufferedReader(Reader in) {
