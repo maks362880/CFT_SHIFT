@@ -1,0 +1,12 @@
+﻿     17-01-2023 14:06:06 All files are empty nothing to read
+     16-01-2023 13:44:33 Error value 'l' in file: '3s.txt' in Row: '3'  value 'l' must be older than 't'
+     16-01-2023 14:15:04 Necessary args is not found
+     16-01-2023 14:19:01 Wrong param 's' with id 0
+     16-01-2023 14:37:25 Something wrong in file 'abc' error message: resource\abc (Не удается найти указанный файл)
+     16-01-2023 14:43:47 Error value 'l' in file: '2s.txt' in Row: '3'  value 'l' must be older than 'r'
+     16-01-2023 15:01:31 Error value 'reger' in file: '3sd.txt' in Row: '3'  value 'reger' must be earlier than 'fdgvrfgv'
+     16-01-2023 15:08:01 Invalid string error 'ger ' in stream: '3sd.txt' in row: '7'
+     16-01-2023 21:06:36 Something wrong in file '2s.txt' error message: Stream closed
+     17-01-2023 12:37:29 Something wrong in file '3a.txt' error message: For input string: "13 " in row: 3
+     17-01-2023 13:59:30 Error value '3' in file: '3a.txt' in Row: '13'  value '3' must be bigger than '787878'
+     17-01-2023 14:22:08   Error string 'p ' in stream: '3d.txt' in row: '2'

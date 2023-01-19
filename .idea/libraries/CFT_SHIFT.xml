@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="CFT_SHIFT">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/out/artifacts/CFT_SHIFT_jar/CFT_SHIFT.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

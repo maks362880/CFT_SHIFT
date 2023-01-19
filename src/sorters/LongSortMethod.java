@@ -113,6 +113,9 @@ public class LongSortMethod {
                     }
                 }
             }
+
+
+
             if (emptyMbr != null) {
                 modifiedBufferedReaderList.remove(emptyMbr);
             }
