@@ -108,7 +108,6 @@ public class BuildAndRunSortMethod {
     private BufferedWriter getOutputStream(String outputFileName) {
         BufferedWriter bw = null;
         try {
-           // bw = new BufferedWriter(new FileWriter("resource\\" + outputFileName));
             bw = new BufferedWriter(new FileWriter(outputFileName));
         } catch (IOException e) {
             new ExceptionAndLogFile("Output Stream '" + outputFileName + "' threw an exception");

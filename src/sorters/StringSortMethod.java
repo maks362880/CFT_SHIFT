@@ -39,7 +39,7 @@ public class StringSortMethod {
             mbrCloseOrNext(firstCorrectElements.firstEntry().getValue());
             if (finishedReaders != sizeOfMbrList) {
                 getCorrectElements(secondCorrectElements);
-                if (!finishSort) {//
+                if (!finishSort) {
                     checkCorrectSortDataAsc(secondCorrectElements.firstKey(), firstCorrectElements.firstKey(),
                             firstCorrectElements.firstEntry().getValue());
                     if (!skipErrorValue) {
@@ -69,7 +69,7 @@ public class StringSortMethod {
             mbrCloseOrNext(firstCorrectElements.lastEntry().getValue());
             if (finishedReaders != sizeOfMbrList) {
                 getCorrectElements(secondCorrectElements);
-                if (!finishSort) {//
+                if (!finishSort) {
                     checkCorrectSortDataDesc(secondCorrectElements.lastKey(), firstCorrectElements.lastKey(),
                             firstCorrectElements.lastEntry().getValue());
                     if (!skipErrorValue) {

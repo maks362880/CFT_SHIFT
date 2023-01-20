@@ -11,7 +11,6 @@ public class WritePartOfStringFiles {
 
     public void write(String outputFileName, List<String> bufferList) {
         try (BufferedWriter bw = new BufferedWriter(
-              //  new FileWriter("resource\\" + outputFileName, true))) {
                 new FileWriter(outputFileName, true))) {
             for (String val : bufferList) {
                 bw.write(val);

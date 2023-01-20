@@ -98,7 +98,6 @@ public class LongSortMethod {
         while (result.isEmpty()) {
             for (ModifiedBufferedReader mbr : modifiedBufferedReaderList) {
                 while (mbr.getCurrentLongValue() == null) {
-                    {
                         try {
                             mbr.readLine();
                             if (!mbr.ready()) {
@@ -110,7 +109,6 @@ public class LongSortMethod {
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
-                    }
                 }
             }
 
